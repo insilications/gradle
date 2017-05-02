@@ -1,6 +1,6 @@
 Name     : gradle
 Version  : 3.5
-Release  : 6
+Release  : 7
 URL      : https://services.gradle.org/distributions/gradle-3.5-bin.zip
 Source0  : https://services.gradle.org/distributions/gradle-3.5-bin.zip
 Source1  : gradle-script.sh
