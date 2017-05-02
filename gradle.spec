@@ -1,6 +1,6 @@
 Name     : gradle
 Version  : 3.5
-Release  : 2
+Release  : 5
 URL      : https://services.gradle.org/distributions/gradle-3.5-bin.zip
 Source0  : https://services.gradle.org/distributions/gradle-3.5-bin.zip
 Source1  : gradle-script.sh
@@ -28,7 +28,7 @@ cp %{SOURCE1} %{buildroot}/usr/bin/gradle
 chmod 755 %{buildroot}/usr/bin/gradle
 
 # Remove unnecessary bat file
-%{buildroot}/usr/share/gradle/bin/gradle.bat
+rm %{buildroot}/usr/share/gradle/bin/gradle.bat
 
 %files
 %defattr(-,root,root,-)
