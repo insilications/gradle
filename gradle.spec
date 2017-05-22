@@ -1,30 +1,41 @@
 Name     : gradle
 Version  : 3.5
-Release  : 7
-URL      : https://services.gradle.org/distributions/gradle-3.5-bin.zip
-Source0  : https://services.gradle.org/distributions/gradle-3.5-bin.zip
-Source1  : gradle-script.sh
+Release  : 8
+URL      : https://github.com/gradle/
+Source0  : https://github.com/gradle/gradle/archive/v3.5.0.tar.gz
+Source1  : all-released-versions.json
+Source2  : gradle-script.sh
+Patch0   : 0001-Change-Gradle-build-to-use-local-Maven-repo.patch
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 LGPL-2.1
+BuildRequires: gradle
+BuildRequires: gradle-dep
+BuildRequires: openjdk-dev
+BuildRequires: ca-certs
+BuildRequires: procps-ng
 
 %description
 You can add .gradle init scripts to this directory. Each one is executed at the start of the build.
 
 %prep
-%setup -q -n gradle-3.5
+%setup -q -n gradle-3.5.0
+%patch0 -p1
 
 %build
+mkdir -p %{buildroot}/.m2
+mkdir /builddir/build/BUILD/gradle-3.5.0/build
+cp -R /usr/share/gradle/.m2/* %{buildroot}/.m2
+ln -s %{buildroot}/.m2 /builddir/.m2
+cp %{SOURCE1} /builddir/build/BUILD/gradle-3.5.0/build
+gradle install  -Pgradle_installPath=/tmp/gradle
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/gradle
-cp -r bin/ getting-started.html init.d/ lib/ LICENSE  media/ NOTICE \
-%{buildroot}/usr/share/gradle
-
+cp -R /tmp/gradle/* %{buildroot}/usr/share/gradle
 # Add helper script
 mkdir -p %{buildroot}/usr/bin
-cp %{SOURCE1} %{buildroot}/usr/bin/gradle
+cp %{SOURCE2} %{buildroot}/usr/bin/gradle
 chmod 755 %{buildroot}/usr/bin/gradle
 
 # Remove unnecessary bat file

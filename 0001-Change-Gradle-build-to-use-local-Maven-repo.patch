@@ -1,0 +1,2383 @@
+From 836e191f778c5dd07c3e5a3e4bf380533df1dbac Mon Sep 17 00:00:00 2001
+From: Israel Padilla <israel.padilla@intel.com>
+Date: Tue, 16 May 2017 21:34:50 +0000
+Subject: [PATCH] Change Gradle build to use local Maven repo.
+
+---
+ build.gradle                                       |  3 +--
+ buildSrc/build.gradle                              |  2 +-
+ .../demo/projects/A/build.gradle                   |  2 +-
+ .../demo/projects/B/build.gradle                   |  2 +-
+ gradle/jmh.gradle                                  |  4 +--
+ .../src/templates/project-with-source/build.gradle |  2 +-
+ .../dependency-management.gradle                   |  2 +-
+ subprojects/docs/docs.gradle                       | 31 +++++++++++++---------
+ subprojects/docs/src/samples/antlr/build.gradle    |  2 +-
+ .../docs/src/samples/application/build.gradle      |  2 +-
+ .../docs/src/samples/buildDashboard/build.gradle   |  2 +-
+ .../samples/clientModuleDependencies/build.gradle  |  4 +--
+ .../docs/src/samples/codeQuality/build.gradle      |  2 +-
+ .../samples/customDistribution/plugin/build.gradle |  2 +-
+ .../src/samples/customPlugin/plugin/build.gradle   |  2 +-
+ .../src/samples/ear/earCustomized/ear/build.gradle |  2 +-
+ .../src/samples/ear/earCustomized/war/build.gradle |  2 +-
+ .../docs/src/samples/ear/earWithWar/build.gradle   |  2 +-
+ .../src/samples/ear/earWithWar/war/build.gradle    |  2 +-
+ .../samples/groovy/crossCompilation/build.gradle   |  2 +-
+ .../samples/groovy/customizedLayout/build.gradle   |  2 +-
+ .../samples/groovy/mixedJavaAndGroovy/build.gradle |  2 +-
+ .../src/samples/groovy/multiproject/build.gradle   |  2 +-
+ .../groovy/multiproject/buildSrc/build.gradle      |  2 +-
+ .../src/samples/groovy/quickstart/build.gradle     |  2 +-
+ .../ivy-publish/java-multi-project/build.gradle    |  2 +-
+ .../ivy-publish/multiple-publications/build.gradle |  2 +-
+ .../docs/src/samples/ivypublish/build.gradle       |  2 +-
+ .../samples/java-library/quickstart/build.gradle   |  2 +-
+ .../docs/src/samples/java/apiAndImpl/build.gradle  |  2 +-
+ .../docs/src/samples/java/base/build.gradle        |  2 +-
+ .../src/samples/java/crossCompilation/build.gradle |  2 +-
+ .../src/samples/java/customizedLayout/build.gradle |  2 +-
+ .../src/samples/java/multiproject/api/build.gradle |  2 +-
+ .../src/samples/java/multiproject/build.gradle     |  2 +-
+ .../java/multiproject/buildSrc/build.gradle        |  2 +-
+ .../docs/src/samples/java/onlyif/build.gradle      |  2 +-
+ .../docs/src/samples/java/quickstart/build.gradle  |  2 +-
+ .../src/samples/java/testListener/build.gradle     |  4 +--
+ .../samples/java/withIntegrationTests/build.gradle |  2 +-
+ .../multiplecomponents/build.gradle                |  2 +-
+ .../samples/maven-publish/javaProject/build.gradle |  2 +-
+ .../multiple-publications/build.gradle             |  2 +-
+ subprojects/docs/src/samples/osgi/build.gradle     |  2 +-
+ .../samples/scala/crossCompilation/build.gradle    |  2 +-
+ .../samples/scala/customizedLayout/build.gradle    |  2 +-
+ .../docs/src/samples/scala/force/build.gradle      |  2 +-
+ .../samples/scala/mixedJavaAndScala/build.gradle   |  2 +-
+ .../docs/src/samples/scala/quickstart/build.gradle |  2 +-
+ .../docs/src/samples/scala/zinc/build.gradle       |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../gradleRunner/gradleVersion/build.gradle        |  2 +-
+ .../gradleRunner/junitQuickstart/build.gradle      |  2 +-
+ .../manualClasspathInjection/build.gradle          |  2 +-
+ .../gradleRunner/spockQuickstart/build.gradle      |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../src/samples/testing/filtering/build.gradle     |  2 +-
+ .../testing/jacoco/application/build.gradle        |  2 +-
+ .../samples/testing/jacoco/quickstart/build.gradle |  2 +-
+ .../samples/testing/junit/categories/build.gradle  |  2 +-
+ .../src/samples/testing/testReport/build.gradle    |  2 +-
+ .../testing/testng/groupbyinstances/build.gradle   |  2 +-
+ .../src/samples/testing/testng/groups/build.gradle |  2 +-
+ .../testing/testng/java-passing/build.gradle       |  2 +-
+ .../testing/testng/preserveorder/build.gradle      |  2 +-
+ .../testing/testng/suitexmlbuilder/build.gradle    |  2 +-
+ .../ant/useExternalAntTaskWithConfig/build.gradle  |  2 +-
+ .../artifacts/defineRepository/build.gradle        |  6 ++---
+ .../artifacts/dependencyBasics/build.gradle        |  2 +-
+ .../artifacts/externalDependencies/build.gradle    |  2 +-
+ .../samples/userguide/artifacts/maven/build.gradle |  2 +-
+ .../userguide/groovy/groovyDependency/build.gradle |  2 +-
+ .../configurationInjection/build.gradle            |  2 +-
+ .../initScripts/externalDependency/init.gradle     |  2 +-
+ .../userguide/initScripts/plugins/build.gradle     |  2 +-
+ .../samples/userguide/java/sourceSets/build.gradle |  2 +-
+ .../userguide/javaLibraryDistribution/build.gradle |  2 +-
+ .../multiproject/dependencies/java/build.gradle    |  2 +-
+ .../multiproject/dependencies/webDist/build.gradle |  2 +-
+ .../externalDependency/build.gradle                |  2 +-
+ .../userguide/scala/scalaDependency/build.gradle   |  2 +-
+ .../userguide/scala/zincDependency/build.gradle    |  2 +-
+ .../userguide/scala/zincOverride/build.gradle      |  2 +-
+ .../tutorial/groovyWithFlatDir/build.gradle        |  2 +-
+ .../userguide/tutorial/projectReports/build.gradle |  2 +-
+ .../samples/webApplication/customized/build.gradle |  2 +-
+ .../samples/webApplication/quickstart/build.gradle |  2 +-
+ .../docs/src/transforms/release-notes.gradle       |  2 +-
+ .../canCreateAndDeleteMetaData/master/build.gradle |  2 +-
+ .../project1/build.gradle                          |  2 +-
+ .../project2/build.gradle                          |  2 +-
+ .../project3/build.gradle                          |  2 +-
+ .../project1/build.gradle                          |  2 +-
+ .../project2/build.gradle                          |  2 +-
+ .../project3/build.gradle                          |  2 +-
+ .../canCreateAndDeleteMetaData/build.gradle        |  2 +-
+ .../overwritesExistingDependencies/build.gradle    |  2 +-
+ .../canUseANonStandardBuildDir/build.gradle        |  2 +-
+ .../internal-performance-testing.gradle            |  2 +-
+ .../envjs/EnvJsPluginIntegrationTest.groovy        |  2 +-
+ .../src/templates/config-inject/build.gradle       |  2 +-
+ .../src/templates/project-with-source/build.gradle |  2 +-
+ .../ParallelJavaPluginTest/shared/build.gradle     |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../canUseCustomFileExtensions/build.gradle        |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../canListSourceFiles/build.gradle                |  2 +-
+ .../compileBadCode/build.gradle                    |  2 +-
+ .../compileBadJavaCode/build.gradle                |  2 +-
+ .../compileGoodCode/build.gradle                   |  2 +-
+ .../compileJavaFx8Code/build.gradle                |  2 +-
+ .../configurationScriptNotSupported/build.gradle   |  2 +-
+ .../failsBecauseOfInvalidConfigFile/build.gradle   |  2 +-
+ .../failsBecauseOfMissingConfigFile/build.gradle   |  2 +-
+ .../groovyToolClassesAreNotVisible/build.gradle    |  2 +-
+ .../useConfigurationScript/build.gradle            |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../canUseAstTransformWrittenInGroovy/build.gradle |  2 +-
+ .../canUseBuiltInAstTransform/build.gradle         |  2 +-
+ .../canUseThirdPartyAstTransform/build.gradle      |  2 +-
+ .../gradle3235/build.gradle                        |  2 +-
+ .../build.gradle                                   |  2 +-
+ subprojects/reporting/reporting.gradle             |  2 +-
+ .../recompilesDependentClasses/build.gradle        |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../compilesAllScalaCodeWhenForced/build.gradle    |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../compilesJavaCodeIncrementally/build.gradle     |  2 +-
+ .../compilesScalaCodeIncrementally/build.gradle    |  2 +-
+ .../gradle/smoketests/gretty-example/build.gradle  |  2 +-
+ .../gradle/smoketests/kotlin-example/build.gradle  |  4 +--
+ .../loggingConfig/build.gradle                     |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../shared/build.gradle                            |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../supportsAssumptions/build.gradle               |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../canSpecifyExcludesOnly/build.gradle            |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../reportsUnloadableCategories/build.gradle       |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../shared/build.gradle                            |  2 +-
+ .../standardOutputLogging/build.gradle             |  2 +-
+ .../canHandleClassLevelIgnoredTests/build.gradle   |  2 +-
+ .../canHaveMultipleTestTaskInstances/build.gradle  |  2 +-
+ .../canRunSingleTests/build.gradle                 |  2 +-
+ .../canRunTestsUsingJUnit3/build.gradle            |  2 +-
+ .../createsRunnerBeforeTests/build.gradle          |  2 +-
+ .../detectsTestClasses/build.gradle                |  2 +-
+ .../executesTestsInCorrectEnvironment/build.gradle |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../suitesOutputIsVisible/build.gradle             |  2 +-
+ .../supportsJunit3Suites/build.gradle              |  2 +-
+ .../supportsTestCategories/build.gradle            |  2 +-
+ .../build.gradle                                   |  2 +-
+ .../shouldNotNavigateToJdkClasses/build.gradle     |  2 +-
+ .../canRunTestsUsingJna/build.gradle               |  2 +-
+ .../canRunTestsUsingJUnit/build.gradle             |  2 +-
+ .../shared/build.gradle                            |  2 +-
+ .../shouldNotNavigateToJdkClasses/build.gradle     |  2 +-
+ 167 files changed, 190 insertions(+), 186 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index f1e28de..4b5ac27 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -216,8 +216,7 @@ allprojects {
+     group = 'org.gradle'
+ 
+     repositories {
+-        maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+-        maven { url 'https://repo.gradle.org/gradle/libs-milestones' }
++        mavenLocal()
+     }
+ 
+     // Force clean tasks to run before any other tasks
+diff --git a/buildSrc/build.gradle b/buildSrc/build.gradle
+index 07ad63e..b04d5df 100644
+--- a/buildSrc/build.gradle
++++ b/buildSrc/build.gradle
+@@ -22,7 +22,7 @@ sourceCompatibility = '1.7'
+ targetCompatibility = '1.7'
+ 
+ repositories {
+-    maven { url 'https://repo.gradle.org/gradle/libs-releases' }
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/design-docs/features/composite-build/dependency-substitution/demo/projects/A/build.gradle b/design-docs/features/composite-build/dependency-substitution/demo/projects/A/build.gradle
+index 49fc775..5c971d6 100644
+--- a/design-docs/features/composite-build/dependency-substitution/demo/projects/A/build.gradle
++++ b/design-docs/features/composite-build/dependency-substitution/demo/projects/A/build.gradle
+@@ -13,7 +13,7 @@ dependencies {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+     maven {
+         url("file://" + file("../repo"))
+     }
+diff --git a/design-docs/features/composite-build/dependency-substitution/demo/projects/B/build.gradle b/design-docs/features/composite-build/dependency-substitution/demo/projects/B/build.gradle
+index 667ffab..c141841 100644
+--- a/design-docs/features/composite-build/dependency-substitution/demo/projects/B/build.gradle
++++ b/design-docs/features/composite-build/dependency-substitution/demo/projects/B/build.gradle
+@@ -12,7 +12,7 @@ subprojects {
+     }
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+         maven {
+             url("file://" + rootProject.file("../repo"))
+         }
+diff --git a/gradle/jmh.gradle b/gradle/jmh.gradle
+index bfc4862..af1fdf3 100644
+--- a/gradle/jmh.gradle
++++ b/gradle/jmh.gradle
+@@ -16,9 +16,7 @@
+ 
+ buildscript {
+     repositories {
+-        maven {
+-            url "https://plugins.gradle.org/m2/"
+-        }
++        mavenLocal()
+     }
+     dependencies {
+         classpath 'me.champeau.gradle:jmh-gradle-plugin:0.3.1'
+diff --git a/subprojects/build-scan-performance/src/templates/project-with-source/build.gradle b/subprojects/build-scan-performance/src/templates/project-with-source/build.gradle
+index 3cca573..ccdbaef 100644
+--- a/subprojects/build-scan-performance/src/templates/project-with-source/build.gradle
++++ b/subprojects/build-scan-performance/src/templates/project-with-source/build.gradle
+@@ -8,7 +8,7 @@ repositories {
+         url rootProject.file("${repository.rootDir.name}").toURI().toURL()
+     }
+ <% } %>
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ <% if (binding.hasVariable("projectDependencies")) { %>
+diff --git a/subprojects/dependency-management/dependency-management.gradle b/subprojects/dependency-management/dependency-management.gradle
+index cd80245..fcc0934 100644
+--- a/subprojects/dependency-management/dependency-management.gradle
++++ b/subprojects/dependency-management/dependency-management.gradle
+@@ -8,7 +8,7 @@ configurations {
+ 
+ repositories {
+     jcenter()
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/docs.gradle b/subprojects/docs/docs.gradle
+index dceeed4..6223c07 100755
+--- a/subprojects/docs/docs.gradle
++++ b/subprojects/docs/docs.gradle
+@@ -14,9 +14,6 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-plugins {
+-    id 'org.asciidoctor.convert' version '1.5.3'
+-}
+ 
+ import javax.xml.transform.TransformerFactory
+ import javax.xml.transform.stream.StreamResult
+@@ -43,21 +40,31 @@ apply plugin: 'pegdown'
+ apply plugin: 'jsoup'
+ apply plugin: 'javascript-base'
+ 
++/*plugins {
++    id 'org.asciidoctor.convert' version '1.5.3'
++}*/
++
++buildscript {
++    repositories {
++        mavenLocal()
++    }
++    dependencies {
++        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.3"
++    }
++}
++
++apply plugin: 'org.asciidoctor.convert'
++
+ repositories {
+-    javaScript.googleApis()
++    mavenLocal()
++    /*javaScript.googleApis()*/
+ 
+     ivy {
+-        name "Google Fonts"
+-        url "http://themes.googleusercontent.com/static/fonts/"
+-        layout 'pattern', {
+-            artifact '[organisation]/v[revision](/[classifier])(.[ext])'
+-            ivy '[organisation]/v[revision]/ivy(.[ext])'
+-        }
++        url "/builddir/.m2/repository"
+     }
+-
+-    maven { url 'https://repo.gradle.org/gradle/gradle-build-internal' }
+ }
+ 
++
+ configurations {
+     userGuideStyleSheets
+     userGuideTask
+diff --git a/subprojects/docs/src/samples/antlr/build.gradle b/subprojects/docs/src/samples/antlr/build.gradle
+index 697dc2e..78ebd01 100644
+--- a/subprojects/docs/src/samples/antlr/build.gradle
++++ b/subprojects/docs/src/samples/antlr/build.gradle
+@@ -5,7 +5,7 @@ apply plugin: 'antlr'
+ 
+ // START SNIPPET declare-dependency
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/application/build.gradle b/subprojects/docs/src/samples/application/build.gradle
+index d61501b..50e905b 100644
+--- a/subprojects/docs/src/samples/application/build.gradle
++++ b/subprojects/docs/src/samples/application/build.gradle
+@@ -35,7 +35,7 @@ distributions {
+ // END SNIPPET distribution-spec
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/buildDashboard/build.gradle b/subprojects/docs/src/samples/buildDashboard/build.gradle
+index af3b197..2e06bc3 100755
+--- a/subprojects/docs/src/samples/buildDashboard/build.gradle
++++ b/subprojects/docs/src/samples/buildDashboard/build.gradle
+@@ -21,7 +21,7 @@ apply plugin: 'codenarc'
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/clientModuleDependencies/build.gradle b/subprojects/docs/src/samples/clientModuleDependencies/build.gradle
+index 52fdcfa..7f07ef3 100644
+--- a/subprojects/docs/src/samples/clientModuleDependencies/build.gradle
++++ b/subprojects/docs/src/samples/clientModuleDependencies/build.gradle
+@@ -1,7 +1,7 @@
+ subprojects {
+     buildscript {
+         repositories {
+-            mavenCentral()
++            mavenLocal()
+         }
+         dependencies {
+             classpath 'junit:junit:4.12'
+@@ -9,6 +9,6 @@ subprojects {
+     }
+     apply plugin: 'java'
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ }
+\ No newline at end of file
+diff --git a/subprojects/docs/src/samples/codeQuality/build.gradle b/subprojects/docs/src/samples/codeQuality/build.gradle
+index 1e89cf3..c8588e6 100755
+--- a/subprojects/docs/src/samples/codeQuality/build.gradle
++++ b/subprojects/docs/src/samples/codeQuality/build.gradle
+@@ -35,7 +35,7 @@ apply plugin: 'java'
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/customDistribution/plugin/build.gradle b/subprojects/docs/src/samples/customDistribution/plugin/build.gradle
+index e20c41f..7da3f06 100644
+--- a/subprojects/docs/src/samples/customDistribution/plugin/build.gradle
++++ b/subprojects/docs/src/samples/customDistribution/plugin/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ configurations {
+diff --git a/subprojects/docs/src/samples/customPlugin/plugin/build.gradle b/subprojects/docs/src/samples/customPlugin/plugin/build.gradle
+index b51e4a0..2c6fdcd 100644
+--- a/subprojects/docs/src/samples/customPlugin/plugin/build.gradle
++++ b/subprojects/docs/src/samples/customPlugin/plugin/build.gradle
+@@ -18,7 +18,7 @@ dependencies {
+ apply plugin: 'maven'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/ear/earCustomized/ear/build.gradle b/subprojects/docs/src/samples/ear/earCustomized/ear/build.gradle
+index ea8a926..6ce53d9 100644
+--- a/subprojects/docs/src/samples/ear/earCustomized/ear/build.gradle
++++ b/subprojects/docs/src/samples/ear/earCustomized/ear/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'ear'
+ apply plugin: 'java'
+ 
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+ 
+ dependencies {
+     // The following dependencies will be the ear modules and
+diff --git a/subprojects/docs/src/samples/ear/earCustomized/war/build.gradle b/subprojects/docs/src/samples/ear/earCustomized/war/build.gradle
+index ec41505..a8bf507 100644
+--- a/subprojects/docs/src/samples/ear/earCustomized/war/build.gradle
++++ b/subprojects/docs/src/samples/ear/earCustomized/war/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: 'war'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/ear/earWithWar/build.gradle b/subprojects/docs/src/samples/ear/earWithWar/build.gradle
+index d14b2ca..fda06aa 100644
+--- a/subprojects/docs/src/samples/ear/earWithWar/build.gradle
++++ b/subprojects/docs/src/samples/ear/earWithWar/build.gradle
+@@ -3,7 +3,7 @@ apply plugin: 'ear'
+ // END SNIPPET use-ear-plugin
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/ear/earWithWar/war/build.gradle b/subprojects/docs/src/samples/ear/earWithWar/war/build.gradle
+index ec41505..a8bf507 100644
+--- a/subprojects/docs/src/samples/ear/earWithWar/war/build.gradle
++++ b/subprojects/docs/src/samples/ear/earWithWar/war/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: 'war'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/groovy/crossCompilation/build.gradle b/subprojects/docs/src/samples/groovy/crossCompilation/build.gradle
+index 5b5eb16..5759610 100644
+--- a/subprojects/docs/src/samples/groovy/crossCompilation/build.gradle
++++ b/subprojects/docs/src/samples/groovy/crossCompilation/build.gradle
+@@ -2,7 +2,7 @@ apply plugin: 'groovy'
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle b/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle
+index ba9575d..cb54c53 100644
+--- a/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle
++++ b/subprojects/docs/src/samples/groovy/customizedLayout/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle b/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle
+index d61fadb..1a0efb4 100644
+--- a/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle
++++ b/subprojects/docs/src/samples/groovy/mixedJavaAndGroovy/build.gradle
+@@ -2,7 +2,7 @@ apply plugin: 'groovy'
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/groovy/multiproject/build.gradle b/subprojects/docs/src/samples/groovy/multiproject/build.gradle
+index fb3c3f8..c02d948 100644
+--- a/subprojects/docs/src/samples/groovy/multiproject/build.gradle
++++ b/subprojects/docs/src/samples/groovy/multiproject/build.gradle
+@@ -1,5 +1,5 @@
+ subprojects {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ }
+\ No newline at end of file
+diff --git a/subprojects/docs/src/samples/groovy/multiproject/buildSrc/build.gradle b/subprojects/docs/src/samples/groovy/multiproject/buildSrc/build.gradle
+index 833be32..59e7b0f 100644
+--- a/subprojects/docs/src/samples/groovy/multiproject/buildSrc/build.gradle
++++ b/subprojects/docs/src/samples/groovy/multiproject/buildSrc/build.gradle
+@@ -1,5 +1,5 @@
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/groovy/quickstart/build.gradle b/subprojects/docs/src/samples/groovy/quickstart/build.gradle
+index 3895f08..b23d0e4 100644
+--- a/subprojects/docs/src/samples/groovy/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/groovy/quickstart/build.gradle
+@@ -5,7 +5,7 @@ apply plugin: 'groovy'
+ 
+ // START SNIPPET groovy-dependency
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/ivy-publish/java-multi-project/build.gradle b/subprojects/docs/src/samples/ivy-publish/java-multi-project/build.gradle
+index 7f34504..57b60b3 100644
+--- a/subprojects/docs/src/samples/ivy-publish/java-multi-project/build.gradle
++++ b/subprojects/docs/src/samples/ivy-publish/java-multi-project/build.gradle
+@@ -6,7 +6,7 @@ subprojects {
+     group = 'org.gradle.sample'
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     // START SNIPPET publish-custom-artifact
+     task sourceJar(type: Jar) {
+diff --git a/subprojects/docs/src/samples/ivy-publish/multiple-publications/build.gradle b/subprojects/docs/src/samples/ivy-publish/multiple-publications/build.gradle
+index e42596c..50098f5 100644
+--- a/subprojects/docs/src/samples/ivy-publish/multiple-publications/build.gradle
++++ b/subprojects/docs/src/samples/ivy-publish/multiple-publications/build.gradle
+@@ -3,7 +3,7 @@ subprojects {
+     apply plugin: 'ivy-publish'
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     publishing {
+diff --git a/subprojects/docs/src/samples/ivypublish/build.gradle b/subprojects/docs/src/samples/ivypublish/build.gradle
+index f1857e1..e12464a 100644
+--- a/subprojects/docs/src/samples/ivypublish/build.gradle
++++ b/subprojects/docs/src/samples/ivypublish/build.gradle
+@@ -18,7 +18,7 @@ ant {
+ File localPublicationsDir = file("$buildDir/repo")
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ task sourceJar(type: Jar) {
+diff --git a/subprojects/docs/src/samples/java-library/quickstart/build.gradle b/subprojects/docs/src/samples/java-library/quickstart/build.gradle
+index 844fd02..fe3c2d9 100644
+--- a/subprojects/docs/src/samples/java-library/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/java-library/quickstart/build.gradle
+@@ -21,7 +21,7 @@ apply plugin: 'java-library'
+ 
+ // START SNIPPET repo
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ // END SNIPPET repo
+ 
+diff --git a/subprojects/docs/src/samples/java/apiAndImpl/build.gradle b/subprojects/docs/src/samples/java/apiAndImpl/build.gradle
+index adc2f14..b34246c 100644
+--- a/subprojects/docs/src/samples/java/apiAndImpl/build.gradle
++++ b/subprojects/docs/src/samples/java/apiAndImpl/build.gradle
+@@ -5,7 +5,7 @@ group = "myorg"
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ sourceSets.all { set ->
+diff --git a/subprojects/docs/src/samples/java/base/build.gradle b/subprojects/docs/src/samples/java/base/build.gradle
+index b0401fe..9d8fabe 100644
+--- a/subprojects/docs/src/samples/java/base/build.gradle
++++ b/subprojects/docs/src/samples/java/base/build.gradle
+@@ -5,7 +5,7 @@ subprojects {
+     version = '1.0'
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     sourceSets {
+diff --git a/subprojects/docs/src/samples/java/crossCompilation/build.gradle b/subprojects/docs/src/samples/java/crossCompilation/build.gradle
+index 03c39c9..dc163ce 100644
+--- a/subprojects/docs/src/samples/java/crossCompilation/build.gradle
++++ b/subprojects/docs/src/samples/java/crossCompilation/build.gradle
+@@ -3,7 +3,7 @@ plugins {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/java/customizedLayout/build.gradle b/subprojects/docs/src/samples/java/customizedLayout/build.gradle
+index c9476f8..8a1754d 100644
+--- a/subprojects/docs/src/samples/java/customizedLayout/build.gradle
++++ b/subprojects/docs/src/samples/java/customizedLayout/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/java/multiproject/api/build.gradle b/subprojects/docs/src/samples/java/multiproject/api/build.gradle
+index 1829bc8..73af8ca 100644
+--- a/subprojects/docs/src/samples/java/multiproject/api/build.gradle
++++ b/subprojects/docs/src/samples/java/multiproject/api/build.gradle
+@@ -1,6 +1,6 @@
+ buildscript {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         classpath 'commons-math:commons-math:1.1'
+diff --git a/subprojects/docs/src/samples/java/multiproject/build.gradle b/subprojects/docs/src/samples/java/multiproject/build.gradle
+index 1bd386d..962c0aa 100644
+--- a/subprojects/docs/src/samples/java/multiproject/build.gradle
++++ b/subprojects/docs/src/samples/java/multiproject/build.gradle
+@@ -4,7 +4,7 @@ subprojects {
+     apply plugin: 'eclipse-wtp'
+ 
+     repositories {
+-       mavenCentral()
++       mavenLocal()
+     }
+ 
+     dependencies {
+diff --git a/subprojects/docs/src/samples/java/multiproject/buildSrc/build.gradle b/subprojects/docs/src/samples/java/multiproject/buildSrc/build.gradle
+index 833be32..59e7b0f 100644
+--- a/subprojects/docs/src/samples/java/multiproject/buildSrc/build.gradle
++++ b/subprojects/docs/src/samples/java/multiproject/buildSrc/build.gradle
+@@ -1,5 +1,5 @@
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/java/onlyif/build.gradle b/subprojects/docs/src/samples/java/onlyif/build.gradle
+index d14a579..da15952 100644
+--- a/subprojects/docs/src/samples/java/onlyif/build.gradle
++++ b/subprojects/docs/src/samples/java/onlyif/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/java/quickstart/build.gradle b/subprojects/docs/src/samples/java/quickstart/build.gradle
+index 2fb8a54..5cd8a99 100644
+--- a/subprojects/docs/src/samples/java/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/java/quickstart/build.gradle
+@@ -18,7 +18,7 @@ jar {
+ 
+ // START SNIPPET repo
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ // END SNIPPET repo
+ 
+diff --git a/subprojects/docs/src/samples/java/testListener/build.gradle b/subprojects/docs/src/samples/java/testListener/build.gradle
+index dfde68e..e1e30fe 100644
+--- a/subprojects/docs/src/samples/java/testListener/build.gradle
++++ b/subprojects/docs/src/samples/java/testListener/build.gradle
+@@ -1,11 +1,11 @@
+ buildscript {
+-  repositories.mavenCentral()
++  repositories.mavenLocal()
+   dependencies.classpath 'junit:junit:4.+'
+ }
+ import static org.junit.Assert.*
+ 
+ apply plugin: 'java'
+-repositories.mavenCentral()
++repositories.mavenLocal()
+ dependencies.testCompile 'junit:junit:4.+'
+ test.ignoreFailures = false
+ 
+diff --git a/subprojects/docs/src/samples/java/withIntegrationTests/build.gradle b/subprojects/docs/src/samples/java/withIntegrationTests/build.gradle
+index 33cfa09..14dffa5 100644
+--- a/subprojects/docs/src/samples/java/withIntegrationTests/build.gradle
++++ b/subprojects/docs/src/samples/java/withIntegrationTests/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ sourceSets {
+diff --git a/subprojects/docs/src/samples/javaLibraryPlugin/multiplecomponents/build.gradle b/subprojects/docs/src/samples/javaLibraryPlugin/multiplecomponents/build.gradle
+index 02881a4..0ead6aa 100644
+--- a/subprojects/docs/src/samples/javaLibraryPlugin/multiplecomponents/build.gradle
++++ b/subprojects/docs/src/samples/javaLibraryPlugin/multiplecomponents/build.gradle
+@@ -83,6 +83,6 @@ model {
+ 
+ // START SNIPPET configuring-repositories
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ // END SNIPPET configuring-repositories
+diff --git a/subprojects/docs/src/samples/maven-publish/javaProject/build.gradle b/subprojects/docs/src/samples/maven-publish/javaProject/build.gradle
+index 78bfc7a..fdbc106 100644
+--- a/subprojects/docs/src/samples/maven-publish/javaProject/build.gradle
++++ b/subprojects/docs/src/samples/maven-publish/javaProject/build.gradle
+@@ -9,7 +9,7 @@ dependencies {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET publish-custom-artifact
+diff --git a/subprojects/docs/src/samples/maven-publish/multiple-publications/build.gradle b/subprojects/docs/src/samples/maven-publish/multiple-publications/build.gradle
+index fea3751..2e60979 100644
+--- a/subprojects/docs/src/samples/maven-publish/multiple-publications/build.gradle
++++ b/subprojects/docs/src/samples/maven-publish/multiple-publications/build.gradle
+@@ -3,7 +3,7 @@ subprojects {
+     apply plugin: 'maven-publish'
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     publishing {
+diff --git a/subprojects/docs/src/samples/osgi/build.gradle b/subprojects/docs/src/samples/osgi/build.gradle
+index dcb608c..9557d11 100644
+--- a/subprojects/docs/src/samples/osgi/build.gradle
++++ b/subprojects/docs/src/samples/osgi/build.gradle
+@@ -7,7 +7,7 @@ apply plugin: 'osgi'
+ // END SNIPPET use-plugin
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+     maven {
+         url 'http://repository.jboss.org/maven2/'
+     }
+diff --git a/subprojects/docs/src/samples/scala/crossCompilation/build.gradle b/subprojects/docs/src/samples/scala/crossCompilation/build.gradle
+index 6cfe8c4..a0f6bf1 100644
+--- a/subprojects/docs/src/samples/scala/crossCompilation/build.gradle
++++ b/subprojects/docs/src/samples/scala/crossCompilation/build.gradle
+@@ -3,7 +3,7 @@ apply plugin: 'scala'
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/scala/customizedLayout/build.gradle b/subprojects/docs/src/samples/scala/customizedLayout/build.gradle
+index 5909eac..634c997 100644
+--- a/subprojects/docs/src/samples/scala/customizedLayout/build.gradle
++++ b/subprojects/docs/src/samples/scala/customizedLayout/build.gradle
+@@ -3,7 +3,7 @@ apply plugin: 'scala'
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/scala/force/build.gradle b/subprojects/docs/src/samples/scala/force/build.gradle
+index fee305a..ffac2d6 100644
+--- a/subprojects/docs/src/samples/scala/force/build.gradle
++++ b/subprojects/docs/src/samples/scala/force/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'scala'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/scala/mixedJavaAndScala/build.gradle b/subprojects/docs/src/samples/scala/mixedJavaAndScala/build.gradle
+index d39b2a4..d928096 100644
+--- a/subprojects/docs/src/samples/scala/mixedJavaAndScala/build.gradle
++++ b/subprojects/docs/src/samples/scala/mixedJavaAndScala/build.gradle
+@@ -3,7 +3,7 @@ apply plugin: 'scala'
+ version = 1.0
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/scala/quickstart/build.gradle b/subprojects/docs/src/samples/scala/quickstart/build.gradle
+index 9820d76..bde6de4 100644
+--- a/subprojects/docs/src/samples/scala/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/scala/quickstart/build.gradle
+@@ -5,7 +5,7 @@ apply plugin: 'scala'
+ 
+ // START SNIPPET scala-dependency
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/scala/zinc/build.gradle b/subprojects/docs/src/samples/scala/zinc/build.gradle
+index aca46b7..71c95b2 100644
+--- a/subprojects/docs/src/samples/scala/zinc/build.gradle
++++ b/subprojects/docs/src/samples/scala/zinc/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'scala'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionCustomTestSourceSet/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionCustomTestSourceSet/build.gradle
+index 4804a01..d4bbf93 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionCustomTestSourceSet/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionCustomTestSourceSet/build.gradle
+@@ -34,5 +34,5 @@ dependencies {
+ // END SNIPPET custom-test-source-set
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart/build.gradle
+index d30b87a..e0a73bc 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/automaticClasspathInjectionQuickstart/build.gradle
+@@ -10,5 +10,5 @@ dependencies {
+ // END SNIPPET automatic-classpath
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/gradleVersion/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/gradleVersion/build.gradle
+index 653e06f..b34a706 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/gradleVersion/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/gradleVersion/build.gradle
+@@ -12,5 +12,5 @@ dependencies {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/junitQuickstart/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/junitQuickstart/build.gradle
+index 0a149bd..fc68185 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/junitQuickstart/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/junitQuickstart/build.gradle
+@@ -13,5 +13,5 @@ dependencies {
+ // END SNIPPET declare-junit-dependency
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/manualClasspathInjection/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/manualClasspathInjection/build.gradle
+index 6d55766..e6743e5 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/manualClasspathInjection/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/manualClasspathInjection/build.gradle
+@@ -10,7 +10,7 @@ dependencies {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET test-logic-classpath
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/spockQuickstart/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/spockQuickstart/build.gradle
+index b41bb9a..6a8bd64 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/spockQuickstart/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/spockQuickstart/build.gradle
+@@ -14,5 +14,5 @@ dependencies {
+ // END SNIPPET declare-spock-dependency
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testKit/gradleRunner/testKitFunctionalTestSpockBuildCache/build.gradle b/subprojects/docs/src/samples/testKit/gradleRunner/testKitFunctionalTestSpockBuildCache/build.gradle
+index 44fe495..f777faf 100644
+--- a/subprojects/docs/src/samples/testKit/gradleRunner/testKitFunctionalTestSpockBuildCache/build.gradle
++++ b/subprojects/docs/src/samples/testKit/gradleRunner/testKitFunctionalTestSpockBuildCache/build.gradle
+@@ -24,5 +24,5 @@ dependencies {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testing/filtering/build.gradle b/subprojects/docs/src/samples/testing/filtering/build.gradle
+index 7f0bc8b..0066524 100644
+--- a/subprojects/docs/src/samples/testing/filtering/build.gradle
++++ b/subprojects/docs/src/samples/testing/filtering/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/jacoco/application/build.gradle b/subprojects/docs/src/samples/testing/jacoco/application/build.gradle
+index 943de86..bee4e09 100644
+--- a/subprojects/docs/src/samples/testing/jacoco/application/build.gradle
++++ b/subprojects/docs/src/samples/testing/jacoco/application/build.gradle
+@@ -31,5 +31,5 @@ task applicationCodeCoverageReport(type:JacocoReport){
+ // END SNIPPET application-configuration
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/docs/src/samples/testing/jacoco/quickstart/build.gradle b/subprojects/docs/src/samples/testing/jacoco/quickstart/build.gradle
+index 0afd006..703d0d7 100644
+--- a/subprojects/docs/src/samples/testing/jacoco/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/testing/jacoco/quickstart/build.gradle
+@@ -29,7 +29,7 @@ jacoco {
+ // END SNIPPET jacoco-configuration
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/junit/categories/build.gradle b/subprojects/docs/src/samples/testing/junit/categories/build.gradle
+index dbe7e4d..4a5389a 100644
+--- a/subprojects/docs/src/samples/testing/junit/categories/build.gradle
++++ b/subprojects/docs/src/samples/testing/junit/categories/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testReport/build.gradle b/subprojects/docs/src/samples/testing/testReport/build.gradle
+index 765be87..5683f90 100644
+--- a/subprojects/docs/src/samples/testing/testReport/build.gradle
++++ b/subprojects/docs/src/samples/testing/testReport/build.gradle
+@@ -4,7 +4,7 @@ subprojects {
+ 
+ // END SNIPPET test-report
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testng/groupbyinstances/build.gradle b/subprojects/docs/src/samples/testing/testng/groupbyinstances/build.gradle
+index c4a11d2..d99a467 100644
+--- a/subprojects/docs/src/samples/testing/testng/groupbyinstances/build.gradle
++++ b/subprojects/docs/src/samples/testing/testng/groupbyinstances/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testng/groups/build.gradle b/subprojects/docs/src/samples/testing/testng/groups/build.gradle
+index d9bc57a..8fe6a44 100644
+--- a/subprojects/docs/src/samples/testing/testng/groups/build.gradle
++++ b/subprojects/docs/src/samples/testing/testng/groups/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testng/java-passing/build.gradle b/subprojects/docs/src/samples/testing/testng/java-passing/build.gradle
+index f4f6125..871225e 100644
+--- a/subprojects/docs/src/samples/testing/testng/java-passing/build.gradle
++++ b/subprojects/docs/src/samples/testing/testng/java-passing/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testng/preserveorder/build.gradle b/subprojects/docs/src/samples/testing/testng/preserveorder/build.gradle
+index 2283078..202c0be 100644
+--- a/subprojects/docs/src/samples/testing/testng/preserveorder/build.gradle
++++ b/subprojects/docs/src/samples/testing/testng/preserveorder/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/testing/testng/suitexmlbuilder/build.gradle b/subprojects/docs/src/samples/testing/testng/suitexmlbuilder/build.gradle
+index cbf6178..7c64018 100644
+--- a/subprojects/docs/src/samples/testing/testng/suitexmlbuilder/build.gradle
++++ b/subprojects/docs/src/samples/testing/testng/suitexmlbuilder/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/userguide/ant/useExternalAntTaskWithConfig/build.gradle b/subprojects/docs/src/samples/userguide/ant/useExternalAntTaskWithConfig/build.gradle
+index 33c0e6a..3189b89 100644
+--- a/subprojects/docs/src/samples/userguide/ant/useExternalAntTaskWithConfig/build.gradle
++++ b/subprojects/docs/src/samples/userguide/ant/useExternalAntTaskWithConfig/build.gradle
+@@ -1,5 +1,5 @@
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET define-classpath
+diff --git a/subprojects/docs/src/samples/userguide/artifacts/defineRepository/build.gradle b/subprojects/docs/src/samples/userguide/artifacts/defineRepository/build.gradle
+index b8837bd..f112e8a 100644
+--- a/subprojects/docs/src/samples/userguide/artifacts/defineRepository/build.gradle
++++ b/subprojects/docs/src/samples/userguide/artifacts/defineRepository/build.gradle
+@@ -74,7 +74,7 @@ repositories {
+ 
+ //START SNIPPET maven-central
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ //END SNIPPET maven-central
+ 
+@@ -94,8 +94,8 @@ repositories {
+ 
+ //START SNIPPET maven-central-jar-repo
+ repositories {
+-    mavenCentral name: 'single-jar-repo', artifactUrls: ["http://repo.mycompany.com/jars"]
+-    mavenCentral name: 'multi-jar-repos', artifactUrls: ["http://repo.mycompany.com/jars1", "http://repo.mycompany.com/jars2"]
++    mavenLocal name: 'single-jar-repo', artifactUrls: ["http://repo.mycompany.com/jars"]
++    mavenLocal name: 'multi-jar-repos', artifactUrls: ["http://repo.mycompany.com/jars1", "http://repo.mycompany.com/jars2"]
+ }
+ //END SNIPPET maven-central-jar-repo
+ 
+diff --git a/subprojects/docs/src/samples/userguide/artifacts/dependencyBasics/build.gradle b/subprojects/docs/src/samples/userguide/artifacts/dependencyBasics/build.gradle
+index 95422be..ec06041 100644
+--- a/subprojects/docs/src/samples/userguide/artifacts/dependencyBasics/build.gradle
++++ b/subprojects/docs/src/samples/userguide/artifacts/dependencyBasics/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/userguide/artifacts/externalDependencies/build.gradle b/subprojects/docs/src/samples/userguide/artifacts/externalDependencies/build.gradle
+index b8e7701..e402984 100644
+--- a/subprojects/docs/src/samples/userguide/artifacts/externalDependencies/build.gradle
++++ b/subprojects/docs/src/samples/userguide/artifacts/externalDependencies/build.gradle
+@@ -1,5 +1,5 @@
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ configurations {
+diff --git a/subprojects/docs/src/samples/userguide/artifacts/maven/build.gradle b/subprojects/docs/src/samples/userguide/artifacts/maven/build.gradle
+index 2fc9686..641e1ba 100644
+--- a/subprojects/docs/src/samples/userguide/artifacts/maven/build.gradle
++++ b/subprojects/docs/src/samples/userguide/artifacts/maven/build.gradle
+@@ -51,7 +51,7 @@ configurations {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/userguide/groovy/groovyDependency/build.gradle b/subprojects/docs/src/samples/userguide/groovy/groovyDependency/build.gradle
+index 1d6b05d..38c096c 100644
+--- a/subprojects/docs/src/samples/userguide/groovy/groovyDependency/build.gradle
++++ b/subprojects/docs/src/samples/userguide/groovy/groovyDependency/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET groovy-test-dependency
+diff --git a/subprojects/docs/src/samples/userguide/initScripts/configurationInjection/build.gradle b/subprojects/docs/src/samples/userguide/initScripts/configurationInjection/build.gradle
+index 9742220..bcf77ea 100644
+--- a/subprojects/docs/src/samples/userguide/initScripts/configurationInjection/build.gradle
++++ b/subprojects/docs/src/samples/userguide/initScripts/configurationInjection/build.gradle
+@@ -1,5 +1,5 @@
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ task showRepos {
+diff --git a/subprojects/docs/src/samples/userguide/initScripts/externalDependency/init.gradle b/subprojects/docs/src/samples/userguide/initScripts/externalDependency/init.gradle
+index 93ab8f5..d46520b 100644
+--- a/subprojects/docs/src/samples/userguide/initScripts/externalDependency/init.gradle
++++ b/subprojects/docs/src/samples/userguide/initScripts/externalDependency/init.gradle
+@@ -3,7 +3,7 @@ import org.apache.commons.math.fraction.Fraction
+ // START SNIPPET declare-classpath
+ initscript {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         classpath group: 'org.apache.commons', name: 'commons-math', version: '2.0'
+diff --git a/subprojects/docs/src/samples/userguide/initScripts/plugins/build.gradle b/subprojects/docs/src/samples/userguide/initScripts/plugins/build.gradle
+index 6648be8..d9afb0a 100644
+--- a/subprojects/docs/src/samples/userguide/initScripts/plugins/build.gradle
++++ b/subprojects/docs/src/samples/userguide/initScripts/plugins/build.gradle
+@@ -16,7 +16,7 @@
+ 
+ // START SNIPPET show-repos-task
+ repositories{
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+  task showRepositories {
+diff --git a/subprojects/docs/src/samples/userguide/java/sourceSets/build.gradle b/subprojects/docs/src/samples/userguide/java/sourceSets/build.gradle
+index 4e8327b..29178e8 100644
+--- a/subprojects/docs/src/samples/userguide/java/sourceSets/build.gradle
++++ b/subprojects/docs/src/samples/userguide/java/sourceSets/build.gradle
+@@ -30,7 +30,7 @@ sourceSets {
+ // END SNIPPET define-source-set
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET source-set-dependencies
+diff --git a/subprojects/docs/src/samples/userguide/javaLibraryDistribution/build.gradle b/subprojects/docs/src/samples/userguide/javaLibraryDistribution/build.gradle
+index 6400be9..d191a17 100755
+--- a/subprojects/docs/src/samples/userguide/javaLibraryDistribution/build.gradle
++++ b/subprojects/docs/src/samples/userguide/javaLibraryDistribution/build.gradle
+@@ -24,7 +24,7 @@ distributions {
+ // END SNIPPET custom-distribution
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/userguide/multiproject/dependencies/java/build.gradle b/subprojects/docs/src/samples/userguide/multiproject/dependencies/java/build.gradle
+index b90118e..2312830 100644
+--- a/subprojects/docs/src/samples/userguide/multiproject/dependencies/java/build.gradle
++++ b/subprojects/docs/src/samples/userguide/multiproject/dependencies/java/build.gradle
+@@ -3,7 +3,7 @@ subprojects {
+     group = 'org.gradle.sample'
+     version = '1.0'
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         testCompile "junit:junit:4.12"
+diff --git a/subprojects/docs/src/samples/userguide/multiproject/dependencies/webDist/build.gradle b/subprojects/docs/src/samples/userguide/multiproject/dependencies/webDist/build.gradle
+index a22bd80..4fb8765 100644
+--- a/subprojects/docs/src/samples/userguide/multiproject/dependencies/webDist/build.gradle
++++ b/subprojects/docs/src/samples/userguide/multiproject/dependencies/webDist/build.gradle
+@@ -7,7 +7,7 @@ allprojects {
+ subprojects {
+     apply plugin: 'war'
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         compile "javax.servlet:servlet-api:2.5"
+diff --git a/subprojects/docs/src/samples/userguide/organizeBuildLogic/externalDependency/build.gradle b/subprojects/docs/src/samples/userguide/organizeBuildLogic/externalDependency/build.gradle
+index 6583b51..b48aab6 100644
+--- a/subprojects/docs/src/samples/userguide/organizeBuildLogic/externalDependency/build.gradle
++++ b/subprojects/docs/src/samples/userguide/organizeBuildLogic/externalDependency/build.gradle
+@@ -3,7 +3,7 @@ import org.apache.commons.codec.binary.Base64
+ // START SNIPPET declare-classpath
+ buildscript {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         classpath group: 'commons-codec', name: 'commons-codec', version: '1.2'
+diff --git a/subprojects/docs/src/samples/userguide/scala/scalaDependency/build.gradle b/subprojects/docs/src/samples/userguide/scala/scalaDependency/build.gradle
+index 0374d2c..ed14205 100644
+--- a/subprojects/docs/src/samples/userguide/scala/scalaDependency/build.gradle
++++ b/subprojects/docs/src/samples/userguide/scala/scalaDependency/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET scala-test-dependency
+diff --git a/subprojects/docs/src/samples/userguide/scala/zincDependency/build.gradle b/subprojects/docs/src/samples/userguide/scala/zincDependency/build.gradle
+index 514c117..7d5d9fa 100644
+--- a/subprojects/docs/src/samples/userguide/scala/zincDependency/build.gradle
++++ b/subprojects/docs/src/samples/userguide/scala/zincDependency/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET zinc-dependency
+diff --git a/subprojects/docs/src/samples/userguide/scala/zincOverride/build.gradle b/subprojects/docs/src/samples/userguide/scala/zincOverride/build.gradle
+index 985d12e..1b62711 100644
+--- a/subprojects/docs/src/samples/userguide/scala/zincOverride/build.gradle
++++ b/subprojects/docs/src/samples/userguide/scala/zincOverride/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET all-dependency
+diff --git a/subprojects/docs/src/samples/userguide/tutorial/groovyWithFlatDir/build.gradle b/subprojects/docs/src/samples/userguide/tutorial/groovyWithFlatDir/build.gradle
+index 5fafcc1..1a7b78f 100644
+--- a/subprojects/docs/src/samples/userguide/tutorial/groovyWithFlatDir/build.gradle
++++ b/subprojects/docs/src/samples/userguide/tutorial/groovyWithFlatDir/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ // START SNIPPET groovy-dependency
+diff --git a/subprojects/docs/src/samples/userguide/tutorial/projectReports/build.gradle b/subprojects/docs/src/samples/userguide/tutorial/projectReports/build.gradle
+index 73224b6..6b4d074 100644
+--- a/subprojects/docs/src/samples/userguide/tutorial/projectReports/build.gradle
++++ b/subprojects/docs/src/samples/userguide/tutorial/projectReports/build.gradle
+@@ -46,7 +46,7 @@ subprojects {
+         testCompile
+     }
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     task compile {
+         description = 'Compiles the source files'
+diff --git a/subprojects/docs/src/samples/webApplication/customized/build.gradle b/subprojects/docs/src/samples/webApplication/customized/build.gradle
+index af1f984..f813a02 100644
+--- a/subprojects/docs/src/samples/webApplication/customized/build.gradle
++++ b/subprojects/docs/src/samples/webApplication/customized/build.gradle
+@@ -12,7 +12,7 @@ configurations {
+ 
+ repositories {
+    flatDir { dirs "lib" }
+-   mavenCentral()
++   mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/samples/webApplication/quickstart/build.gradle b/subprojects/docs/src/samples/webApplication/quickstart/build.gradle
+index 9e708f4..566a591 100644
+--- a/subprojects/docs/src/samples/webApplication/quickstart/build.gradle
++++ b/subprojects/docs/src/samples/webApplication/quickstart/build.gradle
+@@ -6,7 +6,7 @@ apply plugin: 'jetty'
+ // END SNIPPET use-jetty-plugin
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/docs/src/transforms/release-notes.gradle b/subprojects/docs/src/transforms/release-notes.gradle
+index c0c7688..7b7c504 100644
+--- a/subprojects/docs/src/transforms/release-notes.gradle
++++ b/subprojects/docs/src/transforms/release-notes.gradle
+@@ -1,6 +1,6 @@
+ buildscript {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+     dependencies {
+         classpath('com.uwyn:jhighlight:1.0') {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/eclipse/EclipseIntegrationTest/canCreateAndDeleteMetaData/master/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/eclipse/EclipseIntegrationTest/canCreateAndDeleteMetaData/master/build.gradle
+index d2cb304..1d7c60a 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/eclipse/EclipseIntegrationTest/canCreateAndDeleteMetaData/master/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/eclipse/EclipseIntegrationTest/canCreateAndDeleteMetaData/master/build.gradle
+@@ -12,7 +12,7 @@ allprojects {
+ 
+ subprojects {
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     group = 'org.gradle'
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project1/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project1/build.gradle
+index 247a391..3b83226 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project1/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project1/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project2/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project2/build.gradle
+index f7f3d57..a4e6866 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project2/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project2/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project3/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project3/build.gradle
+index 247a391..3b83226 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project3/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaFacetAndCompilerLibraries/project3/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project1/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project1/build.gradle
+index 40dfc05..80b4a39 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project1/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project1/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project2/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project2/build.gradle
+index 58275ac..5389015 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project2/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project2/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project3/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project3/build.gradle
+index 40dfc05..80b4a39 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project3/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/addsScalaSdkAndCompilerLibraries/project3/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/canCreateAndDeleteMetaData/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/canCreateAndDeleteMetaData/build.gradle
+index ca02a4f..3fb1faa 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/canCreateAndDeleteMetaData/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/canCreateAndDeleteMetaData/build.gradle
+@@ -17,7 +17,7 @@ subprojects {
+     }
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     dependencies {
+diff --git a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/overwritesExistingDependencies/build.gradle b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/overwritesExistingDependencies/build.gradle
+index ab6bd93..f096eb2 100644
+--- a/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/overwritesExistingDependencies/build.gradle
++++ b/subprojects/ide/src/integTest/resources/org/gradle/plugins/ide/idea/IdeaIntegrationTest/overwritesExistingDependencies/build.gradle
+@@ -2,7 +2,7 @@ apply plugin: 'java'
+ apply plugin: 'idea'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/integ-test/src/integTest/resources/org/gradle/integtests/ProjectLayoutIntegrationTest/canUseANonStandardBuildDir/build.gradle b/subprojects/integ-test/src/integTest/resources/org/gradle/integtests/ProjectLayoutIntegrationTest/canUseANonStandardBuildDir/build.gradle
+index 0770d43..bc3bef5 100644
+--- a/subprojects/integ-test/src/integTest/resources/org/gradle/integtests/ProjectLayoutIntegrationTest/canUseANonStandardBuildDir/build.gradle
++++ b/subprojects/integ-test/src/integTest/resources/org/gradle/integtests/ProjectLayoutIntegrationTest/canUseANonStandardBuildDir/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/internal-performance-testing/internal-performance-testing.gradle b/subprojects/internal-performance-testing/internal-performance-testing.gradle
+index 4161436..6e50b36 100644
+--- a/subprojects/internal-performance-testing/internal-performance-testing.gradle
++++ b/subprojects/internal-performance-testing/internal-performance-testing.gradle
+@@ -20,7 +20,7 @@ configurations {
+ }
+ 
+ repositories {
+-    javaScript.googleApis()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/javascript/src/integTest/groovy/org/gradle/plugins/javascript/envjs/EnvJsPluginIntegrationTest.groovy b/subprojects/javascript/src/integTest/groovy/org/gradle/plugins/javascript/envjs/EnvJsPluginIntegrationTest.groovy
+index 42e6564..f874215 100644
+--- a/subprojects/javascript/src/integTest/groovy/org/gradle/plugins/javascript/envjs/EnvJsPluginIntegrationTest.groovy
++++ b/subprojects/javascript/src/integTest/groovy/org/gradle/plugins/javascript/envjs/EnvJsPluginIntegrationTest.groovy
+@@ -33,7 +33,7 @@ class EnvJsPluginIntegrationTest extends WellBehavedPluginTest {
+         applyPlugin()
+         addGradlePublicJsRepoScript(buildFile)
+         buildFile << """
+-            repositories.mavenCentral()
++            repositories.mavenLocal()
+         """
+     }
+ 
+diff --git a/subprojects/performance/src/templates/config-inject/build.gradle b/subprojects/performance/src/templates/config-inject/build.gradle
+index f05af42..c85a9a2 100644
+--- a/subprojects/performance/src/templates/config-inject/build.gradle
++++ b/subprojects/performance/src/templates/config-inject/build.gradle
+@@ -10,7 +10,7 @@ repositories {
+         url rootProject.file("${repository.rootDir.name}").toURI().toURL()
+     }
+ <% } %>
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/performance/src/templates/project-with-source/build.gradle b/subprojects/performance/src/templates/project-with-source/build.gradle
+index eb2f8f0..144c1b5 100644
+--- a/subprojects/performance/src/templates/project-with-source/build.gradle
++++ b/subprojects/performance/src/templates/project-with-source/build.gradle
+@@ -8,7 +8,7 @@ repositories {
+         url rootProject.file("${repository.rootDir.name}").toURI().toURL()
+     }
+ <% } %>
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ <% if (binding.hasVariable("projectDependencies")) { %>
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/api/plugins/ParallelJavaPluginTest/shared/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/api/plugins/ParallelJavaPluginTest/shared/build.gradle
+index b172e71..a2994ea 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/api/plugins/ParallelJavaPluginTest/shared/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/api/plugins/ParallelJavaPluginTest/shared/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableAllOptimizations/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableAllOptimizations/build.gradle
+index efba7f1..2ef9527 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableAllOptimizations/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableAllOptimizations/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ task compileWithOptimization(type: GroovyCompile) {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableIntegerOptimization/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableIntegerOptimization/build.gradle
+index f154c12..86ff9e7 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableIntegerOptimization/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canEnableAndDisableIntegerOptimization/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ task compileWithOptimization(type: GroovyCompile) {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canUseCustomFileExtensions/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canUseCustomFileExtensions/build.gradle
+index fe46ed2..688ebbf 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canUseCustomFileExtensions/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/ApiGroovyCompilerIntegrationSpec/canUseCustomFileExtensions/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canCompileAgainstGroovyClassThatDependsOnExternalClass/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canCompileAgainstGroovyClassThatDependsOnExternalClass/build.gradle
+index 5bc2b7a..7298eea 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canCompileAgainstGroovyClassThatDependsOnExternalClass/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canCompileAgainstGroovyClassThatDependsOnExternalClass/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canListSourceFiles/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canListSourceFiles/build.gradle
+index 664d7f7..61a8764 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canListSourceFiles/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/canListSourceFiles/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy.groovyOptions.listFiles = true
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadCode/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadCode/build.gradle
+index c93ae49..6257b16 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadCode/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadCode/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadJavaCode/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadJavaCode/build.gradle
+index c93ae49..6257b16 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadJavaCode/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileBadJavaCode/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileGoodCode/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileGoodCode/build.gradle
+index f09d7f9..3798cff 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileGoodCode/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileGoodCode/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileJavaFx8Code/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileJavaFx8Code/build.gradle
+index c93ae49..6257b16 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileJavaFx8Code/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/compileJavaFx8Code/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/configurationScriptNotSupported/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/configurationScriptNotSupported/build.gradle
+index fc20e82..0dc1b48 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/configurationScriptNotSupported/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/configurationScriptNotSupported/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy.groovyOptions.configurationScript = file('groovycompilerconfig.groovy')
+\ No newline at end of file
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfInvalidConfigFile/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfInvalidConfigFile/build.gradle
+index fc20e82..0dc1b48 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfInvalidConfigFile/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfInvalidConfigFile/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy.groovyOptions.configurationScript = file('groovycompilerconfig.groovy')
+\ No newline at end of file
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfMissingConfigFile/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfMissingConfigFile/build.gradle
+index fc20e82..0dc1b48 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfMissingConfigFile/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/failsBecauseOfMissingConfigFile/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy.groovyOptions.configurationScript = file('groovycompilerconfig.groovy')
+\ No newline at end of file
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/groovyToolClassesAreNotVisible/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/groovyToolClassesAreNotVisible/build.gradle
+index c93ae49..6257b16 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/groovyToolClassesAreNotVisible/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/groovyToolClassesAreNotVisible/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/useConfigurationScript/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/useConfigurationScript/build.gradle
+index fc20e82..0dc1b48 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/useConfigurationScript/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/BasicGroovyCompilerIntegrationSpec/useConfigurationScript/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy.groovyOptions.configurationScript = file('groovycompilerconfig.groovy')
+\ No newline at end of file
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canJointCompileWithJavaCompilerExecutable/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canJointCompileWithJavaCompilerExecutable/build.gradle
+index 64c7d38..3ace8b1 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canJointCompileWithJavaCompilerExecutable/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canJointCompileWithJavaCompilerExecutable/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ compileGroovy {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformThatReferencesGroovyTestCase/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformThatReferencesGroovyTestCase/build.gradle
+index 866d9ee..45cb3e5 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformThatReferencesGroovyTestCase/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformThatReferencesGroovyTestCase/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformWrittenInGroovy/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformWrittenInGroovy/build.gradle
+index 486718c..bfa3e59 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformWrittenInGroovy/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseAstTransformWrittenInGroovy/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseBuiltInAstTransform/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseBuiltInAstTransform/build.gradle
+index 486718c..bfa3e59 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseBuiltInAstTransform/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseBuiltInAstTransform/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseThirdPartyAstTransform/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseThirdPartyAstTransform/build.gradle
+index 486718c..bfa3e59 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseThirdPartyAstTransform/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/canUseThirdPartyAstTransform/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/gradle3235/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/gradle3235/build.gradle
+index 20d27b7..41fa155 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/gradle3235/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/GroovyCompilerIntegrationSpec/gradle3235/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'groovy'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/InvokeDynamicGroovyCompilerSpec/canEnableAndDisableInvokeDynamicOptimization/build.gradle b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/InvokeDynamicGroovyCompilerSpec/canEnableAndDisableInvokeDynamicOptimization/build.gradle
+index 7616356..3c51782 100644
+--- a/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/InvokeDynamicGroovyCompilerSpec/canEnableAndDisableInvokeDynamicOptimization/build.gradle
++++ b/subprojects/plugins/src/integTest/resources/org/gradle/groovy/compile/InvokeDynamicGroovyCompilerSpec/canEnableAndDisableInvokeDynamicOptimization/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ task compileWithOptimization(type: GroovyCompile) {
+diff --git a/subprojects/reporting/reporting.gradle b/subprojects/reporting/reporting.gradle
+index a467c71..bace19d 100644
+--- a/subprojects/reporting/reporting.gradle
++++ b/subprojects/reporting/reporting.gradle
+@@ -7,7 +7,7 @@ configurations {
+ }
+ 
+ repositories {
+-    javaScript.googleApis()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesDependentClasses/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesDependentClasses/build.gradle
+index 545180c..3014356 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesDependentClasses/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesDependentClasses/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'scala'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesSourceWhenPropertiesChange/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesSourceWhenPropertiesChange/build.gradle
+index 557e99a..2aec4cc 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesSourceWhenPropertiesChange/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/IncrementalScalaCompileIntegrationTest/recompilesSourceWhenPropertiesChange/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'scala'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesAllScalaCodeWhenForced/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesAllScalaCodeWhenForced/build.gradle
+index 7baade5..8876bf8 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesAllScalaCodeWhenForced/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesAllScalaCodeWhenForced/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesIncrementallyAcrossProjectBoundaries/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesIncrementallyAcrossProjectBoundaries/build.gradle
+index ef65c8f..2eadb2f 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesIncrementallyAcrossProjectBoundaries/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesIncrementallyAcrossProjectBoundaries/build.gradle
+@@ -2,7 +2,7 @@ subprojects {
+     apply plugin: "scala"
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesJavaCodeIncrementally/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesJavaCodeIncrementally/build.gradle
+index 29aecd5..b60d747 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesJavaCodeIncrementally/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesJavaCodeIncrementally/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesScalaCodeIncrementally/build.gradle b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesScalaCodeIncrementally/build.gradle
+index 29aecd5..b60d747 100644
+--- a/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesScalaCodeIncrementally/build.gradle
++++ b/subprojects/scala/src/integTest/resources/org/gradle/scala/compile/ZincScalaCompilerIntegrationTest/compilesScalaCodeIncrementally/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "scala"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/gretty-example/build.gradle b/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/gretty-example/build.gradle
+index e95f0f4..1463564 100644
+--- a/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/gretty-example/build.gradle
++++ b/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/gretty-example/build.gradle
+@@ -20,7 +20,7 @@ plugins {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/kotlin-example/build.gradle b/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/kotlin-example/build.gradle
+index 045ce99..6dc469e 100644
+--- a/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/kotlin-example/build.gradle
++++ b/subprojects/smoke-test/src/smokeTest/resources/org/gradle/smoketests/kotlin-example/build.gradle
+@@ -2,7 +2,7 @@ buildscript {
+     ext.kotlin_version = '$kotlinVersion'
+ 
+     repositories {
+-        mavenCentral()
++        mavenLocal()
+     }
+ 
+     dependencies {
+@@ -13,7 +13,7 @@ buildscript {
+ apply plugin: 'kotlin'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-base/src/integTest/resources/org/gradle/api/internal/tasks/testing/JULRedirectorIntegrationTest/loggingConfig/build.gradle b/subprojects/testing-base/src/integTest/resources/org/gradle/api/internal/tasks/testing/JULRedirectorIntegrationTest/loggingConfig/build.gradle
+index 0604758..76ab7f0 100644
+--- a/subprojects/testing-base/src/integTest/resources/org/gradle/api/internal/tasks/testing/JULRedirectorIntegrationTest/loggingConfig/build.gradle
++++ b/subprojects/testing-base/src/integTest/resources/org/gradle/api/internal/tasks/testing/JULRedirectorIntegrationTest/loggingConfig/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/executesTestsWhenTestFrameworkChanges/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/executesTestsWhenTestFrameworkChanges/build.gradle
+index ee2c4e0..31721c0 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/executesTestsWhenTestFrameworkChanges/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/executesTestsWhenTestFrameworkChanges/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/shared/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/shared/build.gradle
+index 0604758..76ab7f0 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/shared/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/IncrementalTestIntegrationTest/shared/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSecurityManager/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSecurityManager/build.gradle
+index 8196f19..ff52b63 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSecurityManager/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSecurityManager/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoader/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoader/build.gradle
+index b0e7c96..d8775de 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoader/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoader/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoaderAndJavaAgent/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoaderAndJavaAgent/build.gradle
+index b64addf..4ac709f 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoaderAndJavaAgent/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithCustomSystemClassLoaderAndJavaAgent/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithJMockitLoadedWithJavaAgent/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithJMockitLoadedWithJavaAgent/build.gradle
+index cfa1446..4f7a581 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithJMockitLoadedWithJavaAgent/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/TestEnvironmentIntegrationTest/canRunTestsWithJMockitLoadedWithJavaAgent/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ configurations {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/cucumberjvm/CucumberJVMReportIntegrationTest/testReportingSupportsCucumberStepsWithSlashes/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/cucumberjvm/CucumberJVMReportIntegrationTest/testReportingSupportsCucumberStepsWithSlashes/build.gradle
+index eb5f08a..e13f780 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/cucumberjvm/CucumberJVMReportIntegrationTest/testReportingSupportsCucumberStepsWithSlashes/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/cucumberjvm/CucumberJVMReportIntegrationTest/testReportingSupportsCucumberStepsWithSlashes/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitAssumptionsIntegrationTest/supportsAssumptions/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitAssumptionsIntegrationTest/supportsAssumptions/build.gradle
+index 1c9cc4d..cc2a663 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitAssumptionsIntegrationTest/supportsAssumptions/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitAssumptionsIntegrationTest/supportsAssumptions/build.gradle
+@@ -15,4 +15,4 @@
+  */
+ 
+ apply plugin: 'java'
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canCombineCategoriesWithCustomRunner/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canCombineCategoriesWithCustomRunner/build.gradle
+index 6b5b248..6d9429d 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canCombineCategoriesWithCustomRunner/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canCombineCategoriesWithCustomRunner/build.gradle
+@@ -18,7 +18,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ test {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyExcludesOnly/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyExcludesOnly/build.gradle
+index 72cfbd5..6d052f1 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyExcludesOnly/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyExcludesOnly/build.gradle
+@@ -16,7 +16,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ test {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyIncludeAndExcludeCategories/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyIncludeAndExcludeCategories/build.gradle
+index 34071d2..8edfb45 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyIncludeAndExcludeCategories/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesCoverageIntegrationSpec/canSpecifyIncludeAndExcludeCategories/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ test {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/reportsUnloadableCategories/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/reportsUnloadableCategories/build.gradle
+index 196fb3a..8be4309 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/reportsUnloadableCategories/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/reportsUnloadableCategories/build.gradle
+@@ -19,7 +19,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/testTaskFailsIfCategoriesNotSupported/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/testTaskFailsIfCategoriesNotSupported/build.gradle
+index 9136c73..63c07f7 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/testTaskFailsIfCategoriesNotSupported/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitCategoriesIntegrationSpec/testTaskFailsIfCategoriesNotSupported/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/shared/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/shared/build.gradle
+index 7324197..2814d736d 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/shared/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/shared/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/standardOutputLogging/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/standardOutputLogging/build.gradle
+index 53f4748..c64b742 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/standardOutputLogging/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitConsoleLoggingIntegrationTest/standardOutputLogging/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: "groovy"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIgnoreClassMultiVersionIntegrationSpec/canHandleClassLevelIgnoredTests/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIgnoreClassMultiVersionIntegrationSpec/canHandleClassLevelIgnoredTests/build.gradle
+index f3986de..14a0fdf 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIgnoreClassMultiVersionIntegrationSpec/canHandleClassLevelIgnoredTests/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIgnoreClassMultiVersionIntegrationSpec/canHandleClassLevelIgnoredTests/build.gradle
+@@ -19,5 +19,5 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+\ No newline at end of file
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canHaveMultipleTestTaskInstances/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canHaveMultipleTestTaskInstances/build.gradle
+index 26a9eb6..d9830a6 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canHaveMultipleTestTaskInstances/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canHaveMultipleTestTaskInstances/build.gradle
+@@ -13,7 +13,7 @@ check {
+ }
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunSingleTests/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunSingleTests/build.gradle
+index 8c0741b..2e410a7 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunSingleTests/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunSingleTests/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunTestsUsingJUnit3/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunTestsUsingJUnit3/build.gradle
+index 464a61d..4c70a8f 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunTestsUsingJUnit3/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/canRunTestsUsingJUnit3/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/createsRunnerBeforeTests/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/createsRunnerBeforeTests/build.gradle
+index 02731ea..e793ead 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/createsRunnerBeforeTests/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/createsRunnerBeforeTests/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ dependencies {
+     compile 'junit:junit:4.12'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/detectsTestClasses/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/detectsTestClasses/build.gradle
+index 02731ea..e793ead 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/detectsTestClasses/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/detectsTestClasses/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ dependencies {
+     compile 'junit:junit:4.12'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/executesTestsInCorrectEnvironment/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/executesTestsInCorrectEnvironment/build.gradle
+index 0c80015..83b2c42 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/executesTestsInCorrectEnvironment/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/executesTestsInCorrectEnvironment/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: 'java'
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+ dependencies { testCompile 'junit:junit:4.12', 'ant:ant:1.6.1', 'ant:ant-launcher:1.6.1' }
+ test {
+     systemProperties.testSysProperty = 'value'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/reportsAndBreaksBuildWhenTestFails/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/reportsAndBreaksBuildWhenTestFails/build.gradle
+index 4a6b539..bce3578 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/reportsAndBreaksBuildWhenTestFails/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/reportsAndBreaksBuildWhenTestFails/build.gradle
+@@ -1,6 +1,6 @@
+ apply plugin: 'java'
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ dependencies {
+     testCompile 'junit:junit:4.12'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/suitesOutputIsVisible/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/suitesOutputIsVisible/build.gradle
+index e28a3f9..6b13771 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/suitesOutputIsVisible/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/suitesOutputIsVisible/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: 'java'
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+ dependencies { testCompile 'junit:junit:4.12'}
+ test {
+     include '**/ASuite.class'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsJunit3Suites/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsJunit3Suites/build.gradle
+index b091c5e..4653daa 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsJunit3Suites/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsJunit3Suites/build.gradle
+@@ -15,7 +15,7 @@
+  */
+ 
+ apply plugin: 'java'
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+ dependencies {
+     testCompile "junit:junit:3.8"
+ }
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsTestCategories/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsTestCategories/build.gradle
+index 899a755..b5257d9 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsTestCategories/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/supportsTestCategories/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/testClassesCanBeSharedByMultipleSuites/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/testClassesCanBeSharedByMultipleSuites/build.gradle
+index 3c08b81..ea56a9c 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/testClassesCanBeSharedByMultipleSuites/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitIntegrationTest/testClassesCanBeSharedByMultipleSuites/build.gradle
+@@ -1,5 +1,5 @@
+ apply plugin: 'java'
+-repositories { mavenCentral() }
++repositories { mavenLocal() }
+ dependencies { testCompile 'junit:junit:4.12'}
+ test {
+     include '**/*Suite.class'
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
+index ba90540..edfd992 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJnaIntegrationTest/canRunTestsUsingJna/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJnaIntegrationTest/canRunTestsUsingJna/build.gradle
+index 2ea8b4c..2bb9e7c 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJnaIntegrationTest/canRunTestsUsingJna/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitJnaIntegrationTest/canRunTestsUsingJna/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitMultiVersionIntegrationSpec/canRunTestsUsingJUnit/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitMultiVersionIntegrationSpec/canRunTestsUsingJUnit/build.gradle
+index d70026e..a24cf07 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitMultiVersionIntegrationSpec/canRunTestsUsingJUnit/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/junit/JUnitMultiVersionIntegrationSpec/canRunTestsUsingJUnit/build.gradle
+@@ -17,5 +17,5 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGFailurePolicyIntegrationTest/shared/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGFailurePolicyIntegrationTest/shared/build.gradle
+index 0e5cc3d..2b8bc17 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGFailurePolicyIntegrationTest/shared/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGFailurePolicyIntegrationTest/shared/build.gradle
+@@ -17,7 +17,7 @@
+ apply plugin: "java"
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ test {
+diff --git a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
+index 370295e..f9e532d 100644
+--- a/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
++++ b/subprojects/testing-jvm/src/integTest/resources/org/gradle/testing/testng/TestNGJdkNavigationIntegrationTest/shouldNotNavigateToJdkClasses/build.gradle
+@@ -1,7 +1,7 @@
+ apply plugin: 'java'
+ 
+ repositories {
+-    mavenCentral()
++    mavenLocal()
+ }
+ 
+ dependencies {
+-- 
+2.10.1
+
