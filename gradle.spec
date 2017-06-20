@@ -28,7 +28,7 @@ mkdir /builddir/build/BUILD/gradle-3.5.0/build
 cp -R /usr/share/gradle/.m2/* %{buildroot}/.m2
 ln -s %{buildroot}/.m2 /builddir/.m2
 cp %{SOURCE1} /builddir/build/BUILD/gradle-3.5.0/build
-gradle install  -Pgradle_installPath=/tmp/gradle
+gradle -Pgradle_installPath=/tmp/gradle -PfinalRelease=true install
 
 %install
 mkdir -p %{buildroot}/usr/share/gradle
