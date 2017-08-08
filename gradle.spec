@@ -1,6 +1,6 @@
 Name     : gradle
 Version  : 3.5
-Release  : 9
+Release  : 10
 URL      : https://github.com/gradle/
 Source0  : https://github.com/gradle/gradle/archive/v3.5.0.tar.gz
 Source1  : all-released-versions.json
@@ -14,6 +14,11 @@ BuildRequires: gradle-dep
 BuildRequires: openjdk-dev
 BuildRequires: ca-certs
 BuildRequires: procps-ng
+
+Requires: gradle-dep
+Requires: openjdk-dev
+Requires: ca-certs
+Requires: procps-ng
 
 %description
 You can add .gradle init scripts to this directory. Each one is executed at the start of the build.
