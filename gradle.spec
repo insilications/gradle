@@ -1,6 +1,6 @@
 Name     : gradle
 Version  : 3.5
-Release  : 11
+Release  : 12
 URL      : https://github.com/gradle/
 Source0  : https://github.com/gradle/gradle/archive/v3.5.0.tar.gz
 Source1  : all-released-versions.json
