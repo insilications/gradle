@@ -1,1 +1,5 @@
 cp -R /tmp/gradle %{buildroot}/usr/share/
+rm %{buildroot}/usr/share/gradle/bin/gradle.bat
+
+mkdir -p %{buildroot}/usr/bin
+ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle

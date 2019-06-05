@@ -4,12 +4,13 @@
 #
 Name     : gradle
 Version  : 4.3.1
-Release  : 15
+Release  : 16
 URL      : https://github.com/gradle/gradle/archive/v4.3.1.tar.gz
 Source0  : https://github.com/gradle/gradle/archive/v4.3.1.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 LGPL-2.1-only MIT
+Requires: gradle-bin = %{version}-%{release}
 Requires: gradle-data = %{version}-%{release}
 Requires: gradle-license = %{version}-%{release}
 BuildRequires : ca-certs
@@ -24,6 +25,16 @@ Patch3: Enable-local-fonts.patch
 %description
 <img src="gradle.png" width="350px" alt="Gradle Logo" />
 Gradle is a build tool with a focus on build automation and support for multi-language development. If you are building, testing, publishing, and deploying software on any platform, Gradle offers a flexible model that can support the entire development lifecycle from compiling and packaging code to publishing web sites. Gradle has been designed to support build automation across multiple languages and platforms including Java, Scala, Android, C/C++, and Groovy, and is closely integrated with development tools and continuous integration servers including Eclipse, IntelliJ, and Jenkins.
+
+%package bin
+Summary: bin components for the gradle package.
+Group: Binaries
+Requires: gradle-data = %{version}-%{release}
+Requires: gradle-license = %{version}-%{release}
+
+%description bin
+bin components for the gradle package.
+
 
 %package data
 Summary: data components for the gradle package.
@@ -62,7 +73,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1559776071
+export SOURCE_DATE_EPOCH=1559777444
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -75,7 +86,7 @@ make  %{?_smp_mflags} || gradle --offline -Pgradle_installPath=/tmp/gradle -Pfin
 
 
 %install
-export SOURCE_DATE_EPOCH=1559776071
+export SOURCE_DATE_EPOCH=1559777444
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gradle
 cp subprojects/distributions/src/toplevel/NOTICE %{buildroot}/usr/share/package-licenses/gradle/subprojects_distributions_src_toplevel_NOTICE
@@ -86,17 +97,23 @@ cp subprojects/docs/src/samples/play/custom-distribution/LICENSE %{buildroot}/us
 %make_install || :
 ## install_append content
 cp -R /tmp/gradle %{buildroot}/usr/share/
+rm %{buildroot}/usr/share/gradle/bin/gradle.bat
+mkdir -p %{buildroot}/usr/bin
+ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
 ## install_append end
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/gradle
 
 %files data
 %defattr(-,root,root,-)
 /usr/share/gradle/LICENSE
 /usr/share/gradle/NOTICE
 /usr/share/gradle/bin/gradle
-/usr/share/gradle/bin/gradle.bat
 /usr/share/gradle/init.d/readme.txt
 /usr/share/gradle/lib/annotations-13.0.jar
 /usr/share/gradle/lib/ant-1.9.6.jar
