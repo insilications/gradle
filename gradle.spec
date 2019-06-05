@@ -1,6 +1,6 @@
 Name     : gradle
 Version  : 4.3
-Release  : 15
+Release  : 16
 URL      : https://github.com/gradle/
 Source0  : https://services.gradle.org/distributions/gradle-4.3-bin.zip
 Source1  : all-released-versions.json
