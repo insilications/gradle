@@ -1,21 +1,13 @@
 Name     : gradle
-Version  : 3.5
-Release  : 14
+Version  : 4.3
+Release  : 15
 URL      : https://github.com/gradle/
-Source0  : https://github.com/gradle/gradle/archive/v3.5.0.tar.gz
+Source0  : https://services.gradle.org/distributions/gradle-4.3-bin.zip
 Source1  : all-released-versions.json
 Source2  : gradle-script.sh
-Patch0   : 0001-Change-Gradle-build-to-use-local-Maven-repo.patch
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0 LGPL-2.1
-BuildRequires: gradle
-BuildRequires: gradle-dep
-BuildRequires: openjdk-dev
-BuildRequires: ca-certs
-BuildRequires: procps-ng
-
-Requires: gradle-dep
 Requires: openjdk-dev
 Requires: ca-certs
 Requires: procps-ng
@@ -24,27 +16,18 @@ Requires: procps-ng
 You can add .gradle init scripts to this directory. Each one is executed at the start of the build.
 
 %prep
-%setup -q -n gradle-3.5.0
-%patch0 -p1
+%setup -q -n gradle-4.3
 
 %build
-mkdir -p %{buildroot}/.m2
-mkdir /builddir/build/BUILD/gradle-3.5.0/build
-cp -R /usr/share/gradle/.m2/* %{buildroot}/.m2
-ln -s %{buildroot}/.m2 /builddir/.m2
-cp %{SOURCE1} /builddir/build/BUILD/gradle-3.5.0/build
-gradle -Pgradle_installPath=/tmp/gradle -PfinalRelease=true install
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/gradle
-cp -R /tmp/gradle/* %{buildroot}/usr/share/gradle
-# Add helper script
-mkdir -p %{buildroot}/usr/bin
-cp %{SOURCE2} %{buildroot}/usr/bin/gradle
-chmod 755 %{buildroot}/usr/bin/gradle
-
-# Remove unnecessary bat file
+cp -R ./* %{buildroot}/usr/share/gradle
 rm %{buildroot}/usr/share/gradle/bin/gradle.bat
+
+mkdir -p %{buildroot}/usr/bin
+ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
 
 %files
 %defattr(-,root,root,-)
@@ -57,44 +40,48 @@ rm %{buildroot}/usr/share/gradle/bin/gradle.bat
 /usr/share/gradle/lib/annotations-13.0.jar
 /usr/share/gradle/lib/ant-1.9.6.jar
 /usr/share/gradle/lib/ant-launcher-1.9.6.jar
-/usr/share/gradle/lib/asm-all-5.1.jar
+/usr/share/gradle/lib/asm-debug-all-6.0_ALPHA.jar
 /usr/share/gradle/lib/commons-collections-3.2.2.jar
+/usr/share/gradle/lib/commons-compress-1.14.jar
 /usr/share/gradle/lib/commons-io-2.2.jar
 /usr/share/gradle/lib/commons-lang-2.6.jar
-/usr/share/gradle/lib/dom4j-1.6.1.jar
-/usr/share/gradle/lib/gradle-base-services-3.5.jar
-/usr/share/gradle/lib/gradle-base-services-groovy-3.5.jar
-/usr/share/gradle/lib/gradle-cli-3.5.jar
-/usr/share/gradle/lib/gradle-core-3.5.jar
-/usr/share/gradle/lib/gradle-docs-3.5.jar
-/usr/share/gradle/lib/gradle-installation-beacon-3.5.jar
-/usr/share/gradle/lib/gradle-jvm-services-3.5.jar
-/usr/share/gradle/lib/gradle-launcher-3.5.jar
-/usr/share/gradle/lib/gradle-logging-3.5.jar
-/usr/share/gradle/lib/gradle-messaging-3.5.jar
-/usr/share/gradle/lib/gradle-model-core-3.5.jar
-/usr/share/gradle/lib/gradle-model-groovy-3.5.jar
-/usr/share/gradle/lib/gradle-native-3.5.jar
-/usr/share/gradle/lib/gradle-open-api-3.5.jar
-/usr/share/gradle/lib/gradle-process-services-3.5.jar
-/usr/share/gradle/lib/gradle-resources-3.5.jar
-/usr/share/gradle/lib/gradle-runtime-api-info-3.5.jar
-/usr/share/gradle/lib/gradle-script-kotlin-0.8.0.jar
-/usr/share/gradle/lib/gradle-tooling-api-3.5.jar
-/usr/share/gradle/lib/gradle-ui-3.5.jar
-/usr/share/gradle/lib/gradle-version-info-3.5.jar
-/usr/share/gradle/lib/gradle-wrapper-3.5.jar
-/usr/share/gradle/lib/groovy-all-2.4.10.jar
+/usr/share/gradle/lib/gradle-base-services-4.3.jar
+/usr/share/gradle/lib/gradle-base-services-groovy-4.3.jar
+/usr/share/gradle/lib/gradle-build-cache-4.3.jar
+/usr/share/gradle/lib/gradle-build-option-4.3.jar
+/usr/share/gradle/lib/gradle-cli-4.3.jar
+/usr/share/gradle/lib/gradle-core-4.3.jar
+/usr/share/gradle/lib/gradle-core-api-4.3.jar
+/usr/share/gradle/lib/gradle-docs-4.3.jar
+/usr/share/gradle/lib/gradle-installation-beacon-4.3.jar
+/usr/share/gradle/lib/gradle-jvm-services-4.3.jar
+/usr/share/gradle/lib/gradle-kotlin-dsl-0.12.3.jar
+/usr/share/gradle/lib/gradle-kotlin-dsl-tooling-builders-0.12.3.jar
+/usr/share/gradle/lib/gradle-kotlin-dsl-tooling-models-0.12.3.jar
+/usr/share/gradle/lib/gradle-launcher-4.3.jar
+/usr/share/gradle/lib/gradle-logging-4.3.jar
+/usr/share/gradle/lib/gradle-messaging-4.3.jar
+/usr/share/gradle/lib/gradle-model-core-4.3.jar
+/usr/share/gradle/lib/gradle-model-groovy-4.3.jar
+/usr/share/gradle/lib/gradle-native-4.3.jar
+/usr/share/gradle/lib/gradle-persistent-cache-4.3.jar
+/usr/share/gradle/lib/gradle-process-services-4.3.jar
+/usr/share/gradle/lib/gradle-resources-4.3.jar
+/usr/share/gradle/lib/gradle-runtime-api-info-4.3.jar
+/usr/share/gradle/lib/gradle-tooling-api-4.3.jar
+/usr/share/gradle/lib/gradle-wrapper-4.3.jar
+/usr/share/gradle/lib/groovy-all-2.4.12.jar
 /usr/share/gradle/lib/guava-jdk5-17.0.jar
 /usr/share/gradle/lib/jansi-1.14.jar
 /usr/share/gradle/lib/javax.inject-1.jar
-/usr/share/gradle/lib/jaxen-1.1.jar
 /usr/share/gradle/lib/jcip-annotations-1.0.jar
 /usr/share/gradle/lib/jcl-over-slf4j-1.7.10.jar
+/usr/share/gradle/lib/jsr305-1.3.9.jar
 /usr/share/gradle/lib/jul-to-slf4j-1.7.10.jar
-/usr/share/gradle/lib/kotlin-compiler-embeddable-1.1.0.jar
-/usr/share/gradle/lib/kotlin-reflect-1.1.0.jar
-/usr/share/gradle/lib/kotlin-stdlib-1.1.0.jar
+/usr/share/gradle/lib/kotlin-compiler-embeddable-1.1.51.jar
+/usr/share/gradle/lib/kotlin-reflect-1.1.51.jar
+/usr/share/gradle/lib/kotlin-sam-with-receiver-compiler-plugin-1.1.51.jar
+/usr/share/gradle/lib/kotlin-stdlib-1.1.51.jar
 /usr/share/gradle/lib/kryo-2.20.jar
 /usr/share/gradle/lib/log4j-over-slf4j-1.7.10.jar
 /usr/share/gradle/lib/minlog-1.2.jar
@@ -122,58 +109,63 @@ rm %{buildroot}/usr/share/gradle/bin/gradle.bat
 /usr/share/gradle/lib/plugins/aws-java-sdk-core-1.11.6.jar
 /usr/share/gradle/lib/plugins/aws-java-sdk-kms-1.11.6.jar
 /usr/share/gradle/lib/plugins/aws-java-sdk-s3-1.11.6.jar
-/usr/share/gradle/lib/plugins/bcpg-jdk15on-1.51.jar
-/usr/share/gradle/lib/plugins/bcprov-jdk15on-1.51.jar
-/usr/share/gradle/lib/plugins/biz.aQute.bndlib-3.2.0.jar
+/usr/share/gradle/lib/plugins/bcpg-jdk15on-1.57.jar
+/usr/share/gradle/lib/plugins/bcprov-jdk15on-1.57.jar
+/usr/share/gradle/lib/plugins/biz.aQute.bndlib-3.4.0.jar
 /usr/share/gradle/lib/plugins/bsh-2.0b4.jar
 /usr/share/gradle/lib/plugins/commons-cli-1.2.jar
 /usr/share/gradle/lib/plugins/commons-codec-1.6.jar
-/usr/share/gradle/lib/plugins/core-3.1.1.jar
-/usr/share/gradle/lib/plugins/geronimo-annotation_1.0_spec-1.0.jar
-/usr/share/gradle/lib/plugins/gradle-announce-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-antlr-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-build-cache-http-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-build-comparison-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-build-init-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-code-quality-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-composite-builds-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-dependency-management-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-diagnostics-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-ear-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-ide-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-ide-native-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-ide-play-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-ivy-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-jacoco-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-javascript-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-jetty-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-language-groovy-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-language-java-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-language-jvm-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-language-native-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-language-scala-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-maven-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-osgi-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-platform-base-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-platform-jvm-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-platform-native-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-platform-play-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-plugin-development-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-plugin-use-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-plugins-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-publish-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-reporting-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-resources-http-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-resources-s3-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-resources-sftp-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-scala-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-signing-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-test-kit-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-testing-base-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-testing-jvm-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-testing-native-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-tooling-api-builders-3.5.jar
-/usr/share/gradle/lib/plugins/gradle-workers-3.5.jar
+/usr/share/gradle/lib/plugins/dd-plist-1.20.jar
+/usr/share/gradle/lib/plugins/google-api-client-1.22.0.jar
+/usr/share/gradle/lib/plugins/google-api-services-storage-v1-rev78-1.22.0.jar
+/usr/share/gradle/lib/plugins/google-http-client-1.22.0.jar
+/usr/share/gradle/lib/plugins/google-http-client-jackson2-1.22.0.jar
+/usr/share/gradle/lib/plugins/google-oauth-client-1.22.0.jar
+/usr/share/gradle/lib/plugins/gradle-announce-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-antlr-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-build-cache-http-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-build-comparison-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-build-init-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-code-quality-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-composite-builds-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-dependency-management-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-diagnostics-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-ear-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-ide-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-ide-native-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-ide-play-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-ivy-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-jacoco-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-javascript-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-language-groovy-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-language-java-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-language-jvm-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-language-native-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-language-scala-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-maven-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-osgi-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-platform-base-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-platform-jvm-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-platform-native-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-platform-play-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-plugin-development-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-plugin-use-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-plugins-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-publish-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-reporting-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-resources-gcs-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-resources-http-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-resources-s3-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-resources-sftp-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-scala-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-signing-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-test-kit-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-testing-base-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-testing-jvm-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-testing-native-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-tooling-api-builders-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-version-control-4.3.jar
+/usr/share/gradle/lib/plugins/gradle-workers-4.3.jar
 /usr/share/gradle/lib/plugins/gson-2.7.jar
 /usr/share/gradle/lib/plugins/hamcrest-core-1.3.jar
 /usr/share/gradle/lib/plugins/httpclient-4.4.1.jar
@@ -185,15 +177,8 @@ rm %{buildroot}/usr/share/gradle/bin/gradle.bat
 /usr/share/gradle/lib/plugins/jatl-0.2.2.jar
 /usr/share/gradle/lib/plugins/jcifs-1.3.17.jar
 /usr/share/gradle/lib/plugins/jcommander-1.12.jar
-/usr/share/gradle/lib/plugins/jetty-6.1.26.jar
-/usr/share/gradle/lib/plugins/jetty-annotations-6.1.26.jar
-/usr/share/gradle/lib/plugins/jetty-naming-6.1.26.jar
-/usr/share/gradle/lib/plugins/jetty-plus-6.1.26.jar
-/usr/share/gradle/lib/plugins/jetty-util-6.1.26.jar
 /usr/share/gradle/lib/plugins/joda-time-2.8.2.jar
 /usr/share/gradle/lib/plugins/jsch-0.1.54.jar
-/usr/share/gradle/lib/plugins/jsp-2.1-6.1.14.jar
-/usr/share/gradle/lib/plugins/jsp-api-2.1-6.1.14.jar
 /usr/share/gradle/lib/plugins/junit-4.12.jar
 /usr/share/gradle/lib/plugins/maven-aether-provider-3.0.4.jar
 /usr/share/gradle/lib/plugins/maven-artifact-3.0.4.jar
@@ -216,7 +201,6 @@ rm %{buildroot}/usr/share/gradle/bin/gradle.bat
 /usr/share/gradle/lib/plugins/pmaven-common-0.8-20100325.jar
 /usr/share/gradle/lib/plugins/pmaven-groovy-0.8-20100325.jar
 /usr/share/gradle/lib/plugins/rhino-1.7R3.jar
-/usr/share/gradle/lib/plugins/servlet-api-2.5-20081211.jar
 /usr/share/gradle/lib/plugins/simple-4.1.21.jar
 /usr/share/gradle/lib/plugins/snakeyaml-1.6.jar
 /usr/share/gradle/lib/plugins/testng-6.3.1.jar
