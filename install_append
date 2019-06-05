@@ -1,0 +1,1 @@
+cp -R /tmp/gradle %{buildroot}/usr/share/

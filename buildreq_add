@@ -1,2 +1,7 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
+ca-certs
+gradle
+gradle-dep
+openjdk
+openjdk-dev

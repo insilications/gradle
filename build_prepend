@@ -1,0 +1,12 @@
+# Set up local repository
+mkdir -p %{buildroot}
+cp -r /usr/share/gradle/.m2 %{buildroot}/.m2
+ln -s %{buildroot}/.m2 /builddir/.m2
+
+# Set up all file
+mkdir -p build
+cp all-released-versions.json build/
+
+export LC_ALL=en_US.UTF-8
+export LC_MESSAGES="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
