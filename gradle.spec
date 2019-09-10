@@ -4,23 +4,145 @@
 #
 Name     : gradle
 Version  : 4.3.1
-Release  : 16
+Release  : 17
 URL      : https://github.com/gradle/gradle/archive/v4.3.1.tar.gz
 Source0  : https://github.com/gradle/gradle/archive/v4.3.1.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : Apache-2.0 LGPL-2.1-only MIT
+License  : Apache-2.0 CPL-1.0 LGPL-2.1 LGPL-2.1-only MIT
 Requires: gradle-bin = %{version}-%{release}
 Requires: gradle-data = %{version}-%{release}
 Requires: gradle-license = %{version}-%{release}
+BuildRequires : apache-ant
+BuildRequires : apache-maven
+BuildRequires : buildreq-mvn
 BuildRequires : ca-certs
 BuildRequires : gradle
-BuildRequires : gradle-dep
+BuildRequires : mvn-GMetrics
+BuildRequires : mvn-airbase
+BuildRequires : mvn-airline
+BuildRequires : mvn-ant
+BuildRequires : mvn-ant-launcher
+BuildRequires : mvn-antlr
+BuildRequires : mvn-antlr4
+BuildRequires : mvn-apache
+BuildRequires : mvn-asciidoctor-gradle-plugin
+BuildRequires : mvn-asm
+BuildRequires : mvn-aws-java-sdk
+BuildRequires : mvn-beanshell
+BuildRequires : mvn-biz.aQute.bndlib
+BuildRequires : mvn-bouncycastle
+BuildRequires : mvn-cglib
+BuildRequires : mvn-checkstyle
+BuildRequires : mvn-codenarc
+BuildRequires : mvn-commons-beanutils
+BuildRequires : mvn-commons-cli
+BuildRequires : mvn-commons-codec
+BuildRequires : mvn-commons-collections
+BuildRequires : mvn-commons-compress
+BuildRequires : mvn-commons-io
+BuildRequires : mvn-commons-lang
+BuildRequires : mvn-commons-logging
+BuildRequires : mvn-commons-math3
+BuildRequires : mvn-commons-parent
+BuildRequires : mvn-compiler-interface
+BuildRequires : mvn-dd-plist
+BuildRequires : mvn-dom4j
+BuildRequires : mvn-findbugs
+BuildRequires : mvn-findbugs-annotations
+BuildRequires : mvn-google-api-java-client
+BuildRequires : mvn-google-api-services-storage
+BuildRequires : mvn-google-http-java-client
+BuildRequires : mvn-groovy
+BuildRequires : mvn-gson
+BuildRequires : mvn-guava
+BuildRequires : mvn-hamcrest
+BuildRequires : mvn-http-builder
+BuildRequires : mvn-httpcomponents-client
+BuildRequires : mvn-httpcomponents-core
+BuildRequires : mvn-incremental-compiler
+BuildRequires : mvn-ivy
+BuildRequires : mvn-jackson-annotations
+BuildRequires : mvn-jackson-core
+BuildRequires : mvn-jackson-databind
+BuildRequires : mvn-jackson-parent
+BuildRequires : mvn-jansi
+BuildRequires : mvn-japicmp
+BuildRequires : mvn-japicmp-gradle-plugin
+BuildRequires : mvn-jatl
+BuildRequires : mvn-javaparser-parent
+BuildRequires : mvn-javassist
+BuildRequires : mvn-javax.inject
+BuildRequires : mvn-jcifs
+BuildRequires : mvn-jcip-annotations
+BuildRequires : mvn-jcommander
+BuildRequires : mvn-jetbrains-annotations
+BuildRequires : mvn-jhighlight
+BuildRequires : mvn-jmh
+BuildRequires : mvn-jmh-gradle-plugin
+BuildRequires : mvn-joda-time
+BuildRequires : mvn-jopt-simple
+BuildRequires : mvn-jsch
+BuildRequires : mvn-json-lib
+BuildRequires : mvn-jsoup
+BuildRequires : mvn-jsr305
+BuildRequires : mvn-junit
+BuildRequires : mvn-kotlin
+BuildRequires : mvn-kryo
+BuildRequires : mvn-maven
+BuildRequires : mvn-maven-aether-provider
+BuildRequires : mvn-maven-artifact
+BuildRequires : mvn-maven-compat
+BuildRequires : mvn-maven-core
+BuildRequires : mvn-maven-model
+BuildRequires : mvn-maven-model-builder
+BuildRequires : mvn-maven-parent
+BuildRequires : mvn-maven-plugin-api
+BuildRequires : mvn-maven-repository-metadata
+BuildRequires : mvn-maven-settings
+BuildRequires : mvn-maven-settings-builder
+BuildRequires : mvn-minlog
+BuildRequires : mvn-mvnplugins
+BuildRequires : mvn-native-platform
+BuildRequires : mvn-nekohtml
+BuildRequires : mvn-oauth-java-client
+BuildRequires : mvn-objenesis
+BuildRequires : mvn-oss-parents
+BuildRequires : mvn-ow2
+BuildRequires : mvn-parboiled
+BuildRequires : mvn-pegdown
+BuildRequires : mvn-plexus
+BuildRequires : mvn-plexus-cipher
+BuildRequires : mvn-plexus-classworlds
+BuildRequires : mvn-plexus-containers
+BuildRequires : mvn-plexus-interpolation
+BuildRequires : mvn-plexus-utils
+BuildRequires : mvn-pmaven
+BuildRequires : mvn-reflectasm
+BuildRequires : mvn-rhino
+BuildRequires : mvn-sbt-interface
+BuildRequires : mvn-scala-compiler
+BuildRequires : mvn-scala-library
+BuildRequires : mvn-scala-reflect
+BuildRequires : mvn-simpleframework
+BuildRequires : mvn-slf4j
+BuildRequires : mvn-snakeyaml
+BuildRequires : mvn-sonatype-aether
+BuildRequires : mvn-sonatype-plexus-sec-dispatcher
+BuildRequires : mvn-spock
+BuildRequires : mvn-testng
+BuildRequires : mvn-wagon
+BuildRequires : mvn-xbean
+BuildRequires : mvn-xercesImpl
+BuildRequires : mvn-xml-apis
+BuildRequires : mvn-xml-resolver
+BuildRequires : mvn-zinc
 BuildRequires : openjdk
 BuildRequires : openjdk-dev
 Patch1: Add-all-released-versions.patch
 Patch2: Set-local-maven-repo.patch
 Patch3: Enable-local-fonts.patch
+Patch4: jquery.min.patch
 
 %description
 <img src="gradle.png" width="350px" alt="Gradle Logo" />
@@ -57,14 +179,14 @@ license components for the gradle package.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 ## build_prepend content
-mkdir -p %{buildroot}
-cp -r /usr/share/gradle/.m2 %{buildroot}/.m2
-ln -s %{buildroot}/.m2 /builddir/.m2
-mkdir -p build
+mkdir -p build/
 cp all-released-versions.json build/
+mkdir -p /builddir/.m2/repository/jquery/jquery.min/1.11.0
+cp jquery.min.js /builddir/.m2/repository/jquery/jquery.min/1.11.0/jquery.min-1.11.0.js
 export LC_ALL=en_US.UTF-8
 export LC_MESSAGES="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
@@ -72,29 +194,19 @@ export LC_CTYPE="en_US.UTF-8"
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1559777444
-export GCC_IGNORE_WERROR=1
-export AR=gcc-ar
-export RANLIB=gcc-ranlib
-export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
-make  %{?_smp_mflags} || gradle --offline -Pgradle_installPath=/tmp/gradle -PfinalRelease=true install
-
+mkdir -p /builddir/.m2
+cp -r /usr/share/java/.m2/* /builddir/.m2/
+gradle --offline -Pgradle_installPath=/tmp/gradle -PfinalRelease=true install --exclude-task \
+:docs:configureCss
 
 %install
-export SOURCE_DATE_EPOCH=1559777444
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gradle
+cp LICENSE %{buildroot}/usr/share/package-licenses/gradle/LICENSE
 cp subprojects/distributions/src/toplevel/NOTICE %{buildroot}/usr/share/package-licenses/gradle/subprojects_distributions_src_toplevel_NOTICE
 cp subprojects/docs/src/docs/userguide/licenses.adoc %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_docs_userguide_licenses.adoc
 cp subprojects/docs/src/samples/application/src/dist/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_application_src_dist_LICENSE
 cp subprojects/docs/src/samples/play/custom-assets/copyright.txt %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-assets_copyright.txt
 cp subprojects/docs/src/samples/play/custom-distribution/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-distribution_LICENSE
-%make_install || :
 ## install_append content
 cp -R /tmp/gradle %{buildroot}/usr/share/
 rm %{buildroot}/usr/share/gradle/bin/gradle.bat
@@ -303,6 +415,7 @@ ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
 
 %files license
 %defattr(0644,root,root,0755)
+/usr/share/package-licenses/gradle/LICENSE
 /usr/share/package-licenses/gradle/subprojects_distributions_src_toplevel_NOTICE
 /usr/share/package-licenses/gradle/subprojects_docs_src_docs_userguide_licenses.adoc
 /usr/share/package-licenses/gradle/subprojects_docs_src_samples_application_src_dist_LICENSE

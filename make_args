@@ -1,1 +1,2 @@
-|| gradle --offline -Pgradle_installPath=/tmp/gradle -PfinalRelease=true install
+-Pgradle_installPath=/tmp/gradle -PfinalRelease=true install --exclude-task
+:docs:configureCss

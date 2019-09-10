@@ -1,2 +1,8 @@
 # This file contains build requirements that get picked up but are
 # undesirable. One entry per line, no whitespace.
+mvn-dependencyManagement
+mvn-ideNative
+mvn-javascript
+mvn-jquery.min
+mvn-osgi
+mvn-testingJvm

@@ -1,11 +1,9 @@
-# Set up local repository
-mkdir -p %{buildroot}
-cp -r /usr/share/gradle/.m2 %{buildroot}/.m2
-ln -s %{buildroot}/.m2 /builddir/.m2
-
 # Set up all file
-mkdir -p build
+mkdir -p build/
 cp all-released-versions.json build/
+
+mkdir -p /builddir/.m2/repository/jquery/jquery.min/1.11.0
+cp jquery.min.js /builddir/.m2/repository/jquery/jquery.min/1.11.0/jquery.min-1.11.0.js
 
 export LC_ALL=en_US.UTF-8
 export LC_MESSAGES="en_US.UTF-8"

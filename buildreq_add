@@ -2,6 +2,17 @@
 # picked up automatically. One name per line, no whitespace.
 ca-certs
 gradle
-gradle-dep
+mvn-apache
+mvn-findbugs-annotations
+mvn-gson
+mvn-httpcomponents-core
+mvn-ivy
+mvn-jetbrains-annotations
+mvn-kotlin
+mvn-simpleframework
+mvn-maven
+mvn-maven-parent
+mvn-maven-core
+mvn-pmaven
 openjdk
 openjdk-dev

@@ -1,3 +1,10 @@
 # This file contains recursive sources that require this package
 apache-kafka
 elasticsearch
+gradle
+mvn-codenarc
+mvn-groovy
+mvn-japicmp-gradle-plugin
+mvn-jmh-gradle-plugin
+mvn-native-platform
+mvn-spock
