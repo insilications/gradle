@@ -4,7 +4,7 @@
 #
 Name     : gradle
 Version  : 5.6.2
-Release  : 18
+Release  : 19
 URL      : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Source0  : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Summary  : No detailed summary available
