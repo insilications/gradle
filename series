@@ -1,4 +1,5 @@
 Add-all-released-versions.patch
-Set-local-maven-repo.patch
-Enable-local-fonts.patch
 jquery.min.patch
+jquery.min-1.8.patch
+Drop-tag-single-build-plugin.patch
+Allow-file-schemes-for-repos.patch

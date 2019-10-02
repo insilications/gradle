@@ -1,111 +1,226 @@
-4.3.1
-mvn-GMetrics
-mvn-airbase
-mvn-airline
-mvn-ant
-mvn-ant-launcher
-mvn-antlr
-mvn-antlr4
-mvn-asciidoctor-gradle-plugin
+5.6.2
+mvn(antlr:antlr:jar) = 2.7.7
+mvn(biz.aQute.bnd:biz.aQute.bndlib:jar) = 4.0.0
+mvn(com.amazonaws:aws-java-sdk-core:jar) = 1.11.407
+mvn(com.amazonaws:aws-java-sdk-kms:jar) = 1.11.407
+mvn(com.amazonaws:aws-java-sdk-s3:jar) = 1.11.407
+mvn(com.andreapivetta.kolor:kolor:jar) = 0.0.2
+mvn(com.beust:jcommander:jar) = 1.35
+mvn(com.esotericsoftware.kryo:kryo:jar) = 2.24.0
+mvn(com.esotericsoftware.minlog:minlog:jar) = 1.2
+mvn(com.fasterxml.jackson.core:jackson-annotations:jar) = 2.9.8
+mvn(com.fasterxml.jackson.core:jackson-core:jar) = 2.9.8
+mvn(com.fasterxml.jackson.core:jackson-databind:jar) = 2.9.8
+mvn(com.fasterxml.jackson:jackson-bom:jar) = 2.9.8
+mvn(com.fasterxml.jackson:jackson-parent:pom) = 2.9.1.2
+mvn(com.github.javaparser:javaparser-core:jar) = 3.6.11
+mvn(com.github.javaparser:javaparser-symbol-solver-core:jar) = 3.6.11
+mvn(com.github.shyiko.klob:klob:jar) = 0.2.1
+mvn(com.github.shyiko:ktlint:jar) = 0.30.0
+mvn(com.github.siom79.japicmp:japicmp:jar) = 0.10.0
+mvn(com.google.api-client:google-api-client:jar) = 1.25.0
+mvn(com.google.apis:google-api-services-storage:jar) = v1.rev136.1.25.0
+mvn(com.google.code.findbugs:annotations:jar) = 2.0.1
+mvn(com.google.code.findbugs:bcel:jar) = 2.0.1
+mvn(com.google.code.findbugs:findbugs:jar) = 2.0.1
+mvn(com.google.code.findbugs:jFormatString:jar) = 2.0.1
+mvn(com.google.code.gson:gson-parent:pom) = 2.8.5
+mvn(com.google.code.gson:gson:jar) = 2.8.5
+mvn(com.google.collections:google-collections:jar) = 1.0
+mvn(com.google.guava:guava-parent:pom) = 27.1.android
+mvn(com.google.guava:guava:jar) = 23.4.jre
+mvn(com.google.guava:guava:jar) = 27.1.android
+mvn(com.google.http-client:google-http-client-jackson2:jar) = 1.25.0
+mvn(com.google.oauth-client:google-oauth-client:jar) = 1.25.0
+mvn(com.google:google:jar) = 1
+mvn(com.googlecode.jatl:jatl:jar) = 0.2.3
+mvn(com.googlecode.plist:dd-plist:jar) = 1.21
+mvn(com.gradle.publish:plugin-publish-plugin:jar) = 0.10.0
+mvn(com.gradle:build-scan-plugin:jar) = 2.4.1
+mvn(com.h2database:h2:jar) = 1.4.196
+mvn(com.ibm.icu:icu4j:jar) = 2.6.1
+mvn(com.ibm.icu:icu4j:jar) = 59.1
+mvn(com.jcraft:jsch:jar) = 0.1.54
+mvn(com.jcraft:jzlib:jar) = 1.1.3
+mvn(com.nhaarman:mockito-kotlin:jar) = 1.6.0
+mvn(com.openhtmltopdf:openhtmltopdf-core:jar) = 0.0.1.RC13
+mvn(com.openhtmltopdf:openhtmltopdf-jsoup-dom-converter:jar) = 0.0.1.RC13
+mvn(com.openhtmltopdf:openhtmltopdf-pdfbox:jar) = 0.0.1.RC13
+mvn(com.openhtmltopdf:openhtmltopdf-rtl-support:jar) = 0.0.1.RC13
+mvn(com.puppycrawl.tools:checkstyle:jar) = 8.12
+mvn(com.sun.mail:mailapi:jar) = 1.6.0
+mvn(com.sun.xml.bind.mvn:jaxb-bundles:jar) = 2.2.11
+mvn(com.sun.xml.bind.mvn:jaxb-bundles:jar) = 2.3.1
+mvn(com.sun.xml.bind.mvn:jaxb-parent:pom) = 2.2.11
+mvn(com.sun.xml.bind.mvn:jaxb-parent:pom) = 2.3.1
+mvn(com.sun.xml.bind:jaxb-bom-ext:jar) = 2.2.11
+mvn(com.sun.xml.bind:jaxb-bom-ext:jar) = 2.3.1
+mvn(com.sun.xml.bind:jaxb-core:jar) = 2.2.11
+mvn(com.sun.xml.bind:jaxb-impl:jar) = 2.2.11
+mvn(com.sun.xml.bind:jaxb-impl:jar) = 2.3.1
+mvn(com.thoughtworks.qdox:qdox:jar) = 2.0.M9
+mvn(com.typesafe.sbt:compiler-interface:jar) = 0.13.15
+mvn(com.typesafe.sbt:incremental-compiler:jar) = 0.13.15
+mvn(com.typesafe.sbt:sbt-interface:jar) = 0.13.15
+mvn(com.typesafe.zinc:zinc:jar) = 0.3.15
+mvn(com.uwyn:jhighlight:jar) = 1.0
+mvn(com.vdurmont:semver4j:jar) = 2.1.0
+mvn(com.vladsch.flexmark:flexmark-all:jar) = 0.34.56
+mvn(commons-beanutils:commons-beanutils:jar) = 1.9.3
+mvn(commons-codec:commons-codec:jar) = 1.9
+mvn(commons-collections:commons-collections:jar) = 3.2.2
+mvn(commons-lang:commons-lang:jar) = 2.6
+mvn(commons-logging:commons-logging:jar) = 1.2
+mvn(de.rototor.pdfbox:graphics2d:jar) = 0.12
+mvn(de.undercouch:gradle-download-task:jar) = 3.4.3
+mvn(dom4j:dom4j:jar) = 1.6.1
+mvn(gradle.plugin.org.jetbrains.gradle.plugin.idea-ext:gradle-idea-ext:jar) = 0.4.2
+mvn(info.picocli:picocli:jar) = 2.3.0
+mvn(io.mockk:mockk:jar) = 1.8.13
+mvn(it.unimi.dsi:fastutil:jar) = 8.2.1
+mvn(javax.activation:activation:jar) = 1.1.1
+mvn(javax.xml.bind:jaxb-api:jar) = 2.2.12
+mvn(jaxen:jaxen:jar) = 1.1.1
+mvn(jdom:jdom:jar) = 1.0
+mvn(joda-time:joda-time:jar) = 1.6
+mvn(junit:junit:jar) = 4.12
+mvn(me.champeau.gradle:japicmp-gradle-plugin:jar) = 0.2.7
+mvn(me.champeau.gradle:jmh-gradle-plugin:jar) = 0.4.8
+mvn(net.bytebuddy:byte-buddy-agent:jar) = 1.8.5
+mvn(net.bytebuddy:byte-buddy:jar) = 1.8.22
+mvn(net.bytebuddy:byte-buddy:jar) = 1.8.5
+mvn(net.rubygrapefruit:native-platform:jar) = 0.18
+mvn(net.sf.ezmorph:ezmorph:jar) = 1.0.6
+mvn(net.sf.jopt-simple:jopt-simple:jar) = 4.6
+mvn(net.sf.json-lib:json-lib:jar) = 2.3
+mvn(net.sf.saxon:Saxon-HE:jar) = 9.8.0.12
+mvn(net.sourceforge.nekohtml:nekohtml:jar) = 1.9.16
+mvn(net.swiftzer.semver:semver:jar) = 1.1.1
+mvn(org.antlr:antlr4-runtime:jar) = 4.7.1
+mvn(org.apache-extras.beanshell:bsh:jar) = 2.0b6
+mvn(org.apache.ant:ant:jar) = 1.9.14
+mvn(org.apache.commons:commons-compress:jar) = 1.15
+mvn(org.apache.commons:commons-math3:jar) = 3.2
+mvn(org.apache.commons:commons-parent:pom) = 32
+mvn(org.apache.commons:commons-parent:pom) = 34
+mvn(org.apache.httpcomponents:httpclient:jar) = 4.5.3
+mvn(org.apache.httpcomponents:httpclient:jar) = 4.5.6
+mvn(org.apache.httpcomponents:httpcomponents-client:jar) = 4.5.3
+mvn(org.apache.httpcomponents:httpcomponents-client:jar) = 4.5.6
+mvn(org.apache.httpcomponents:httpcomponents-parent:pom) = 10
+mvn(org.apache.httpcomponents:project:jar) = 7
+mvn(org.apache.ivy:ivy:jar) = 2.3.0
+mvn(org.apache.lucene:lucene-analyzers-common:jar) = 5.5.5
+mvn(org.apache.lucene:lucene-core:jar) = 5.5.5
+mvn(org.apache.lucene:lucene-queryparser:jar) = 5.5.5
+mvn(org.apache.maven.wagon:wagon-file:jar) = 3.0.0
+mvn(org.apache.maven.wagon:wagon-http:jar) = 3.0.0
+mvn(org.apache.maven:maven-aether-provider:jar) = 3.3.9
+mvn(org.apache.maven:maven-artifact:jar) = 3.3.9
+mvn(org.apache.maven:maven-builder-support:jar) = 3.3.9
+mvn(org.apache.maven:maven-compat:jar) = 3.0.4
+mvn(org.apache.maven:maven-core:jar) = 3.0.4
+mvn(org.apache.maven:maven-model-builder:jar) = 3.3.9
+mvn(org.apache.maven:maven-model:jar) = 3.3.9
+mvn(org.apache.maven:maven-parent:pom) = 27
+mvn(org.apache.maven:maven-plugin-api:jar) = 3.0.4
+mvn(org.apache.maven:maven-repository-metadata:jar) = 3.3.9
+mvn(org.apache.maven:maven-settings-builder:jar) = 3.0.4
+mvn(org.apache.maven:maven-settings:jar) = 3.0.4
+mvn(org.apache.maven:maven:jar) = 3.3.9
+mvn(org.apache.pdfbox:pdfbox:jar) = 2.0.8
+mvn(org.apache.pdfbox:xmpbox:jar) = 2.0.8
+mvn(org.apache.velocity:velocity:jar) = 1.7
+mvn(org.apache.xbean:xbean-reflect:jar) = 3.7
+mvn(org.apache:apache:jar) = 13
+mvn(org.apiguardian:apiguardian-api:jar) = 1.0.0
+mvn(org.asciidoctor:asciidoctor-gradle-plugin:jar) = 1.5.10
+mvn(org.asciidoctor:asciidoctorj-groovy-dsl:jar) = 1.0.0.Alpha3
+mvn(org.asciidoctor:asciidoctorj-pdf:jar) = 1.5.0.alpha.16
+mvn(org.asciidoctor:asciidoctorj:jar) = 1.5.8.1
+mvn(org.bouncycastle:bcpg-jdk15on:jar) = 1.61
+mvn(org.bouncycastle:bcprov-jdk15on:jar) = 1.61
+mvn(org.checkerframework:checker-qual:jar) = 2.5.2
+mvn(org.codehaus.groovy.modules.http-builder:http-builder:jar) = 0.7.2
+mvn(org.codehaus.groovy:groovy:jar) = 2.4.15
+mvn(org.codehaus.mojo:animal-sniffer-annotations:jar) = 1.17
+mvn(org.codehaus.mojo:animal-sniffer-parent:pom) = 1.17
+mvn(org.codehaus.mojo:mojo-parent:pom) = 40
+mvn(org.codehaus.plexus:plexus-component-annotations:jar) = 1.6
+mvn(org.codehaus.plexus:plexus-components:jar) = 1.3.1
+mvn(org.codehaus.plexus:plexus-containers:jar) = 1.6
+mvn(org.codehaus.plexus:plexus-interpolation:jar) = 1.21
+mvn(org.codehaus.plexus:plexus-utils:jar) = 3.0.22
+mvn(org.codehaus.plexus:plexus:jar) = 3.3.1
+mvn(org.codehaus.plexus:plexus:jar) = 3.3.2
+mvn(org.codenarc:CodeNarc:jar) = 1.0
+mvn(org.eclipse.aether:aether-api:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-connector-basic:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-impl:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-spi:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-transport-file:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-transport-http:jar) = 1.1.0
+mvn(org.eclipse.aether:aether-util:jar) = 1.1.0
+mvn(org.fusesource.jansi:jansi-project:jar) = 1.17.1
+mvn(org.fusesource.jansi:jansi:jar) = 1.17.1
+mvn(org.fusesource:fusesource-pom:jar) = 1.11
+mvn(org.glassfish.jaxb:jaxb-bom:jar) = 2.2.11
+mvn(org.glassfish:javax.json:jar) = 1.0.4
+mvn(org.gmetrics:GMetrics:jar) = 1.0
+mvn(org.gradle.groovy:groovy-all:jar) = 1.3.2.5.4
+mvn(org.hamcrest:hamcrest-core:jar) = 1.3
+mvn(org.javassist:javassist:jar) = 3.22.0.GA
+mvn(org.javassist:javassist:jar) = 3.23.0.GA
+mvn(org.jetbrains.intellij.deps:trove4j:jar) = 1.0.20181211
+mvn(org.jetbrains.kotlin:kotlin-gradle-plugin:jar) = 1.3.41
+mvn(org.jetbrains.kotlin:kotlin-sam-with-receiver-compiler-plugin:jar) = 1.3.41
+mvn(org.jetbrains.kotlin:kotlin-sam-with-receiver:jar) = 1.3.41
+mvn(org.jetbrains.kotlin:kotlin-script-runtime:jar) = 1.3.41
+mvn(org.jetbrains.kotlin:kotlin-stdlib-js:jar) = 1.3.41
+mvn(org.jetbrains.kotlinx:kotlinx-coroutines-core:jar) = 1.1.1
+mvn(org.jetbrains:annotations:jar) = 13.0
+mvn(org.jlleitschuh.gradle:ktlint-gradle:jar) = 7.1.0
+mvn(org.jruby:jruby-complete:jar) = 9.1.17.0
+mvn(org.jsoup:jsoup:jar) = 1.10.2
+mvn(org.junit.jupiter:junit-jupiter-api:jar) = 5.1.0
+mvn(org.junit.platform:junit-platform-commons:jar) = 1.1.0
+mvn(org.junit.platform:junit-platform-commons:jar) = 1.3.1
+mvn(org.junit.platform:junit-platform-engine:jar) = 1.3.1
+mvn(org.junit.platform:junit-platform-launcher:jar) = 1.3.1
+mvn(org.mockito:mockito-core:jar) = 2.18.3
+mvn(org.mozilla:rhino:jar) = 1.7.10
+mvn(org.nibor.autolink:autolink:jar) = 0.6.0
+mvn(org.objenesis:objenesis:jar) = 2.6
+mvn(org.openjdk.jmh:jmh-core:jar) = 1.21
+mvn(org.openmbee.junit:junit-xml-parser:jar) = 1.0.0
+mvn(org.opentest4j:opentest4j:jar) = 1.0.0
+mvn(org.opentest4j:opentest4j:jar) = 1.1.1
+mvn(org.ow2.asm:asm-util:jar) = 7.1
+mvn(org.ow2.asm:asm:jar) = 7.1
+mvn(org.ow2:ow2:jar) = 1.5
+mvn(org.owasp:dependency-check-gradle:jar) = 3.1.0
+mvn(org.samba.jcifs:jcifs:jar) = 1.3.17
+mvn(org.scala-lang:scala-compiler:jar) = 2.10.6
+mvn(org.scala-lang:scala-library:jar) = 2.10.6
+mvn(org.scala-lang:scala-reflect:jar) = 2.10.6
+mvn(org.simpleframework:simple:jar) = 4.1.21
+mvn(org.slf4j:log4j-over-slf4j:jar) = 1.7.25
+mvn(org.sonatype.aether:aether-connector-wagon:jar) = 1.13.1
+mvn(org.sonatype.oss:oss-parent:pom) = 7
+mvn(org.sonatype.pmaven:pmaven-common:jar) = 0.8.20100325
+mvn(org.sonatype.pmaven:pmaven-groovy:jar) = 0.8.20100325
+mvn(org.spockframework:spock-core:jar) = 1.3.groovy.2.5
+mvn(org.testng:testng:jar) = 6.3.1
+mvn(org.tukaani:xz:jar) = 1.6
+mvn(org.yaml:snakeyaml:jar) = 1.17
+mvn(org.ysb33r.gradle:grolifant:jar) = 0.10
+mvn(software.amazon.ion:ion-java:jar) = 1.0.2
+mvn(xalan:xalan:jar) = 2.6.0
+mvn(xalan:xalan:jar) = 2.7.1
+mvn(xerces:xercesImpl:jar) = 2.12.0
+mvn(xerces:xmlParserAPIs:jar) = 2.6.2
+mvn(xml-apis:xml-apis:jar) = 1.4.01
+mvn(xml-resolver:xml-resolver:jar) = 1.2
+mvn(xom:xom:jar) = 1.0
 mvn-asm
-mvn-aws-java-sdk
-mvn-beanshell
-mvn-biz.aQute.bndlib
-mvn-bouncycastle
-mvn-cglib
-mvn-checkstyle
-mvn-codenarc
-mvn-commons-beanutils
-mvn-commons-cli
-mvn-commons-codec
-mvn-commons-collections
-mvn-commons-compress
-mvn-commons-io
-mvn-commons-lang
-mvn-commons-logging
-mvn-commons-math3
-mvn-commons-parent
-mvn-compiler-interface
-mvn-dd-plist
-mvn-dependencyManagement
-mvn-dom4j
-mvn-findbugs
-mvn-google-api-java-client
-mvn-google-api-services-storage
-mvn-google-http-java-client
-mvn-groovy
-mvn-guava
-mvn-hamcrest
-mvn-http-builder
-mvn-httpcomponents-client
-mvn-ideNative
-mvn-incremental-compiler
-mvn-jackson-annotations
-mvn-jackson-core
-mvn-jackson-databind
-mvn-jackson-parent
-mvn-jansi
-mvn-japicmp
-mvn-japicmp-gradle-plugin
-mvn-jatl
-mvn-javaparser-parent
-mvn-javassist
-mvn-javax.inject
-mvn-jcifs
-mvn-jcip-annotations
-mvn-jcommander
-mvn-jhighlight
-mvn-jmh
-mvn-jmh-gradle-plugin
-mvn-joda-time
-mvn-jopt-simple
-mvn-jsch
-mvn-json-lib
-mvn-jsoup
-mvn-jsr305
-mvn-junit
-mvn-kryo
-mvn-maven-aether-provider
-mvn-maven-artifact
-mvn-maven-compat
-mvn-maven-model
-mvn-maven-model-builder
-mvn-maven-plugin-api
-mvn-maven-repository-metadata
-mvn-maven-settings
-mvn-maven-settings-builder
-mvn-minlog
-mvn-mvnplugins
-mvn-native-platform
-mvn-nekohtml
-mvn-oauth-java-client
-mvn-objenesis
-mvn-oss-parents
-mvn-ow2
-mvn-parboiled
-mvn-pegdown
-mvn-plexus
-mvn-plexus-cipher
-mvn-plexus-classworlds
-mvn-plexus-containers
-mvn-plexus-interpolation
-mvn-plexus-utils
-mvn-reflectasm
-mvn-rhino
-mvn-sbt-interface
-mvn-scala-compiler
-mvn-scala-library
-mvn-scala-reflect
-mvn-slf4j
-mvn-snakeyaml
-mvn-sonatype-aether
-mvn-sonatype-plexus-sec-dispatcher
-mvn-spock
-mvn-testingJvm
-mvn-testng
-mvn-wagon
-mvn-xbean
-mvn-xercesImpl
-mvn-xml-apis
-mvn-xml-resolver
-mvn-zinc
+mvn-org.eclipse.jgit
