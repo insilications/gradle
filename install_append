@@ -1,5 +1,7 @@
 cp -R /tmp/gradle %{buildroot}/usr/share/
 rm %{buildroot}/usr/share/gradle/bin/gradle.bat
+rm %{buildroot}/usr/share/gradle/samples/native-binaries/cunit/libs/cunit/2.1-2/lib/osx/libcunit.a
+rm %{buildroot}/usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/lib/osx/libgtest.a
 find %{buildroot}/usr/share/gradle -iname *.lib -exec rm {} \;
 
 mkdir -p %{buildroot}/usr/bin

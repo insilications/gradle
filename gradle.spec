@@ -4,7 +4,7 @@
 #
 Name     : gradle
 Version  : 5.6.2
-Release  : 20
+Release  : 21
 URL      : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Source0  : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Summary  : No detailed summary available
@@ -308,6 +308,13 @@ license components for the gradle package.
 %patch5 -p1
 
 %build
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+mkdir -p %{buildroot}
+mkdir -p ~/.m2
+cp -r /usr/share/java/.m2/* ~/.m2/ || :
+cd ../gradle-5.6.2
 ## build_prepend content
 mkdir -p build/
 cp all-released-versions.json build/
@@ -320,12 +327,6 @@ export LC_MESSAGES="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk
 ## build_prepend end
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
-mkdir -p %{buildroot}
-mkdir -p ~/.m2
-cp -r /usr/share/java/.m2/* ~/.m2/ || :
 find . -type f '(' -name '*.gradle' -o -name '*.gradle.kts' ')' -exec sed -i 's|\(repositories\s*{\)|\1\n    mavenLocal()|' {} +
 gradle --offline dependencies || :
 gradle --offline -Pgradle_installPath=/tmp/gradle -PfinalRelease=true installAll -x distDocs -x dslHtml -x userguideMultiPage -x userguideSinglePage -x javadocAll
@@ -340,6 +341,7 @@ cp subprojects/docs/src/samples/application/groovy/src/dist/LICENSE %{buildroot}
 cp subprojects/docs/src/samples/application/kotlin/src/dist/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_application_kotlin_src_dist_LICENSE
 cp subprojects/docs/src/samples/play/custom-assets/copyright.txt %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-assets_copyright.txt
 cp subprojects/docs/src/samples/play/custom-distribution/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-distribution_LICENSE
+cd ../gradle-5.6.2
 gradle --offline || :
 if [[ -d build/install ]]; then
 pushd build/install
@@ -355,14 +357,15 @@ fi
 done
 popd
 done
-find . -type f -name '*.bat' -exec rm -f {} +
 mkdir -p %{buildroot}/usr/share/java/gradle
-cp -r * %{buildroot}/usr/share/java/gradle
+cp -r lib %{buildroot}/usr/share/java/gradle
 popd
 fi
 ## install_append content
 cp -R /tmp/gradle %{buildroot}/usr/share/
 rm %{buildroot}/usr/share/gradle/bin/gradle.bat
+rm %{buildroot}/usr/share/gradle/samples/native-binaries/cunit/libs/cunit/2.1-2/lib/osx/libcunit.a
+rm %{buildroot}/usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/lib/osx/libgtest.a
 find %{buildroot}/usr/share/gradle -iname *.lib -exec rm {} \;
 mkdir -p %{buildroot}/usr/bin
 ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
@@ -1509,7 +1512,6 @@ ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
 /usr/share/gradle/samples/native-binaries/cunit/README.md
 /usr/share/gradle/samples/native-binaries/cunit/build.gradle
 /usr/share/gradle/samples/native-binaries/cunit/libs/cunit/2.1-2/lib/linux/libcunit.a
-/usr/share/gradle/samples/native-binaries/cunit/libs/cunit/2.1-2/lib/osx/libcunit.a
 /usr/share/gradle/samples/native-binaries/cunit/settings.gradle
 /usr/share/gradle/samples/native-binaries/cunit/src/operators/c/minus.c
 /usr/share/gradle/samples/native-binaries/cunit/src/operators/c/plus.c
@@ -1536,7 +1538,6 @@ ln -s /usr/share/gradle/bin/gradle %{buildroot}/usr/bin/gradle
 /usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/include/gtest/internal/gtest-tuple.h.pump
 /usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/include/gtest/internal/gtest-type-util.h.pump
 /usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/lib/linux/libgtest.a
-/usr/share/gradle/samples/native-binaries/google-test/libs/googleTest/1.7.0/lib/osx/libgtest.a
 /usr/share/gradle/samples/native-binaries/google-test/settings.gradle
 /usr/share/gradle/samples/native-binaries/google-test/src/operators/cpp/minus.cpp
 /usr/share/gradle/samples/native-binaries/google-test/src/operators/cpp/plus.cpp
