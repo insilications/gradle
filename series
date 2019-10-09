@@ -3,3 +3,4 @@ jquery.min.patch
 jquery.min-1.8.patch
 Drop-tag-single-build-plugin.patch
 Allow-file-schemes-for-repos.patch
+CVE-2019-16370.patch

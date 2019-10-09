@@ -4,7 +4,7 @@
 #
 Name     : gradle
 Version  : 5.6.2
-Release  : 21
+Release  : 22
 URL      : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Source0  : https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
 Summary  : No detailed summary available
@@ -256,6 +256,7 @@ Patch2: jquery.min.patch
 Patch3: jquery.min-1.8.patch
 Patch4: Drop-tag-single-build-plugin.patch
 Patch5: Allow-file-schemes-for-repos.patch
+Patch6: CVE-2019-16370.patch
 
 %description
 <img src="gradle.png" width="350px" alt="Gradle Logo" />
@@ -306,15 +307,9 @@ license components for the gradle package.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
-mkdir -p %{buildroot}
-mkdir -p ~/.m2
-cp -r /usr/share/java/.m2/* ~/.m2/ || :
-cd ../gradle-5.6.2
 ## build_prepend content
 mkdir -p build/
 cp all-released-versions.json build/
@@ -327,6 +322,12 @@ export LC_MESSAGES="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk
 ## build_prepend end
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+mkdir -p %{buildroot}
+mkdir -p ~/.m2
+cp -r /usr/share/java/.m2/* ~/.m2/ || :
 find . -type f '(' -name '*.gradle' -o -name '*.gradle.kts' ')' -exec sed -i 's|\(repositories\s*{\)|\1\n    mavenLocal()|' {} +
 gradle --offline dependencies || :
 gradle --offline -Pgradle_installPath=/tmp/gradle -PfinalRelease=true installAll -x distDocs -x dslHtml -x userguideMultiPage -x userguideSinglePage -x javadocAll
@@ -341,7 +342,6 @@ cp subprojects/docs/src/samples/application/groovy/src/dist/LICENSE %{buildroot}
 cp subprojects/docs/src/samples/application/kotlin/src/dist/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_application_kotlin_src_dist_LICENSE
 cp subprojects/docs/src/samples/play/custom-assets/copyright.txt %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-assets_copyright.txt
 cp subprojects/docs/src/samples/play/custom-distribution/LICENSE %{buildroot}/usr/share/package-licenses/gradle/subprojects_docs_src_samples_play_custom-distribution_LICENSE
-cd ../gradle-5.6.2
 gradle --offline || :
 if [[ -d build/install ]]; then
 pushd build/install
@@ -357,8 +357,9 @@ fi
 done
 popd
 done
+find . -type f -name '*.bat' -exec rm -f {} +
 mkdir -p %{buildroot}/usr/share/java/gradle
-cp -r lib %{buildroot}/usr/share/java/gradle
+cp -r * %{buildroot}/usr/share/java/gradle
 popd
 fi
 ## install_append content
