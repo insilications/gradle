@@ -1,2 +1,0 @@
-# TODO: enable docs when deps sources are available
--Pgradle_installPath=/tmp/gradle -PfinalRelease=true installAll -x distDocs -x dslHtml -x userguideMultiPage -x userguideSinglePage -x javadocAll

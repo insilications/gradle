@@ -1,5 +1,5 @@
 PKG_NAME := gradle
-URL = https://github.com/gradle/gradle/archive/v5.6.2.tar.gz
+URL = https://github.com/insilications/gradle-clr.git
 ARCHIVES = 
 
 include ../common/Makefile.common
