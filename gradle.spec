@@ -5,12 +5,13 @@
 %define keepstatic 1
 Name     : gradle
 Version  : 6.8.3
-Release  : 23
+Release  : 26
 URL      : file:///aot/build/clearlinux/packages/gradle/gradle-.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/gradle/gradle-.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : LGPL-2.1-only MIT
+Requires: gradle-bin = %{version}-%{release}
 BuildRequires : bash
 BuildRequires : buildreq-cmake
 BuildRequires : ca-certs
@@ -33,7 +34,26 @@ BuildRequires : xmlstarlet
 BuildRequires : zlib-dev
 
 %description
-# Gradle for Clear Linux
+Gradle is a build tool with a focus on build automation and support for multi-language development. If you are building, testing, publishing, and deploying software on any platform, Gradle offers a flexible model that can support the entire development lifecycle from compiling and packaging code to publishing web sites. Gradle has been designed to support build automation across multiple languages and platforms including Java, Scala, Android, C/C++, and Groovy, and is closely integrated with development tools and continuous integration servers including Eclipse, IntelliJ, and Jenkins.
+
+%package bin
+Summary: bin components for the gradle package.
+Group: Binaries
+
+%description bin
+bin components for the gradle package.
+
+
+%package dev
+Summary: dev components for the gradle package.
+Group: Development
+Requires: gradle-bin = %{version}-%{release}
+Provides: gradle-devel = %{version}-%{release}
+Requires: gradle = %{version}-%{release}
+
+%description dev
+dev components for the gradle package.
+
 
 %prep
 %setup -q -n gradle
@@ -45,7 +65,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1616444052
+export SOURCE_DATE_EPOCH=1616456871
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -53,12 +73,12 @@ export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-reg
 export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export CXXFLAGS="$CXXFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
-%cmake ..
+%cmake .. -DCMAKE_INSTALL_LIBDIR=/usr/lib -DLIB_INSTALL_DIR=/usr/lib -DLIB_SUFFIX=
 make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1616444052
+export SOURCE_DATE_EPOCH=1616456871
 rm -rf %{buildroot}
 pushd clr-build
 %make_install
@@ -66,3 +86,238 @@ popd
 
 %files
 %defattr(-,root,root,-)
+/usr/lib/annotations-13.0.jar
+/usr/lib/ant-1.10.9.jar
+/usr/lib/ant-launcher-1.10.9.jar
+/usr/lib/antlr4-runtime-4.7.2.jar
+/usr/lib/asm-7.3.1.jar
+/usr/lib/asm-analysis-7.3.1.jar
+/usr/lib/asm-commons-7.3.1.jar
+/usr/lib/asm-tree-7.3.1.jar
+/usr/lib/commons-compress-1.19.jar
+/usr/lib/commons-io-2.6.jar
+/usr/lib/commons-lang-2.6.jar
+/usr/lib/failureaccess-1.0.1.jar
+/usr/lib/fastutil-8.3.0-min.jar
+/usr/lib/file-events-0.22-milestone-9.jar
+/usr/lib/file-events-linux-aarch64-0.22-milestone-9.jar
+/usr/lib/file-events-linux-amd64-0.22-milestone-9.jar
+/usr/lib/file-events-osx-amd64-0.22-milestone-9.jar
+/usr/lib/file-events-windows-amd64-0.22-milestone-9.jar
+/usr/lib/file-events-windows-amd64-min-0.22-milestone-9.jar
+/usr/lib/file-events-windows-i386-0.22-milestone-9.jar
+/usr/lib/file-events-windows-i386-min-0.22-milestone-9.jar
+/usr/lib/gradle-api-metadata-6.8.3.jar
+/usr/lib/gradle-base-annotations-6.8.3.jar
+/usr/lib/gradle-base-services-6.8.3.jar
+/usr/lib/gradle-base-services-groovy-6.8.3.jar
+/usr/lib/gradle-bootstrap-6.8.3.jar
+/usr/lib/gradle-build-cache-6.8.3.jar
+/usr/lib/gradle-build-cache-base-6.8.3.jar
+/usr/lib/gradle-build-cache-packaging-6.8.3.jar
+/usr/lib/gradle-build-events-6.8.3.jar
+/usr/lib/gradle-build-operations-6.8.3.jar
+/usr/lib/gradle-build-option-6.8.3.jar
+/usr/lib/gradle-cli-6.8.3.jar
+/usr/lib/gradle-core-6.8.3.jar
+/usr/lib/gradle-core-api-6.8.3.jar
+/usr/lib/gradle-execution-6.8.3.jar
+/usr/lib/gradle-file-collections-6.8.3.jar
+/usr/lib/gradle-file-watching-6.8.3.jar
+/usr/lib/gradle-files-6.8.3.jar
+/usr/lib/gradle-hashing-6.8.3.jar
+/usr/lib/gradle-installation-beacon-6.8.3.jar
+/usr/lib/gradle-jvm-services-6.8.3.jar
+/usr/lib/gradle-kotlin-dsl-6.8.3.jar
+/usr/lib/gradle-kotlin-dsl-tooling-models-6.8.3.jar
+/usr/lib/gradle-launcher-6.8.3.jar
+/usr/lib/gradle-logging-6.8.3.jar
+/usr/lib/gradle-messaging-6.8.3.jar
+/usr/lib/gradle-model-core-6.8.3.jar
+/usr/lib/gradle-model-groovy-6.8.3.jar
+/usr/lib/gradle-native-6.8.3.jar
+/usr/lib/gradle-normalization-java-6.8.3.jar
+/usr/lib/gradle-persistent-cache-6.8.3.jar
+/usr/lib/gradle-process-services-6.8.3.jar
+/usr/lib/gradle-resources-6.8.3.jar
+/usr/lib/gradle-runtime-api-info-6.8.3.jar
+/usr/lib/gradle-snapshots-6.8.3.jar
+/usr/lib/gradle-tooling-api-6.8.3.jar
+/usr/lib/gradle-worker-processes-6.8.3.jar
+/usr/lib/gradle-wrapper-6.8.3.jar
+/usr/lib/groovy-all-1.3-2.5.12.jar
+/usr/lib/guava-27.1-android.jar
+/usr/lib/jansi-1.18.jar
+/usr/lib/javax.inject-1.jar
+/usr/lib/jcl-over-slf4j-1.7.28.jar
+/usr/lib/jsr305-3.0.2.jar
+/usr/lib/jul-to-slf4j-1.7.28.jar
+/usr/lib/kotlin-compiler-embeddable-1.4.20-patched-for-gradle-6.8.3.jar
+/usr/lib/kotlin-daemon-embeddable-1.4.20.jar
+/usr/lib/kotlin-reflect-1.4.20.jar
+/usr/lib/kotlin-sam-with-receiver-compiler-plugin-1.4.20.jar
+/usr/lib/kotlin-script-runtime-1.4.20.jar
+/usr/lib/kotlin-scripting-common-1.4.20.jar
+/usr/lib/kotlin-scripting-compiler-embeddable-1.4.20.jar
+/usr/lib/kotlin-scripting-compiler-impl-embeddable-1.4.20.jar
+/usr/lib/kotlin-scripting-jvm-1.4.20.jar
+/usr/lib/kotlin-scripting-jvm-host-1.4.20.jar
+/usr/lib/kotlin-stdlib-1.4.20.jar
+/usr/lib/kotlin-stdlib-common-1.4.20.jar
+/usr/lib/kotlin-stdlib-jdk7-1.4.20.jar
+/usr/lib/kotlin-stdlib-jdk8-1.4.20.jar
+/usr/lib/kotlinx-metadata-jvm-0.1.0.jar
+/usr/lib/kryo-2.24.0.jar
+/usr/lib/log4j-over-slf4j-1.7.28.jar
+/usr/lib/minlog-1.2.jar
+/usr/lib/native-platform-0.22-milestone-9.jar
+/usr/lib/native-platform-freebsd-amd64-libcpp-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-aarch64-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-aarch64-ncurses5-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-aarch64-ncurses6-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-amd64-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-amd64-ncurses5-0.22-milestone-9.jar
+/usr/lib/native-platform-linux-amd64-ncurses6-0.22-milestone-9.jar
+/usr/lib/native-platform-osx-amd64-0.22-milestone-9.jar
+/usr/lib/native-platform-windows-amd64-0.22-milestone-9.jar
+/usr/lib/native-platform-windows-amd64-min-0.22-milestone-9.jar
+/usr/lib/native-platform-windows-i386-0.22-milestone-9.jar
+/usr/lib/native-platform-windows-i386-min-0.22-milestone-9.jar
+/usr/lib/objenesis-2.6.jar
+/usr/lib/slf4j-api-1.7.28.jar
+/usr/lib/tomlj-1.0.0.jar
+/usr/lib/trove4j-1.0.20181211.jar
+/usr/lib/xml-apis-1.4.01.jar
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/gradle
+/usr/bin/gradle.bat
+
+%files dev
+%defattr(-,root,root,-)
+/usr/lib/plugins/aether-api-1.13.1.jar
+/usr/lib/plugins/aether-connector-wagon-1.13.1.jar
+/usr/lib/plugins/aether-impl-1.13.1.jar
+/usr/lib/plugins/aether-spi-1.13.1.jar
+/usr/lib/plugins/aether-util-1.13.1.jar
+/usr/lib/plugins/apiguardian-api-1.1.0.jar
+/usr/lib/plugins/asm-util-7.3.1.jar
+/usr/lib/plugins/aws-java-sdk-core-1.11.633.jar
+/usr/lib/plugins/aws-java-sdk-kms-1.11.633.jar
+/usr/lib/plugins/aws-java-sdk-s3-1.11.633.jar
+/usr/lib/plugins/bcpg-jdk15on-1.64.jar
+/usr/lib/plugins/bcpkix-jdk15on-1.64.jar
+/usr/lib/plugins/bcprov-jdk15on-1.64.jar
+/usr/lib/plugins/bsh-2.0b6.jar
+/usr/lib/plugins/commons-codec-1.13.jar
+/usr/lib/plugins/dd-plist-1.21.jar
+/usr/lib/plugins/google-api-client-1.25.0.jar
+/usr/lib/plugins/google-api-services-storage-v1-rev136-1.25.0.jar
+/usr/lib/plugins/google-http-client-1.25.0.jar
+/usr/lib/plugins/google-http-client-jackson2-1.25.0.jar
+/usr/lib/plugins/google-oauth-client-1.25.0.jar
+/usr/lib/plugins/gradle-antlr-6.8.3.jar
+/usr/lib/plugins/gradle-build-cache-http-6.8.3.jar
+/usr/lib/plugins/gradle-build-init-6.8.3.jar
+/usr/lib/plugins/gradle-build-profile-6.8.3.jar
+/usr/lib/plugins/gradle-code-quality-6.8.3.jar
+/usr/lib/plugins/gradle-composite-builds-6.8.3.jar
+/usr/lib/plugins/gradle-configuration-cache-6.8.3.jar
+/usr/lib/plugins/gradle-dependency-management-6.8.3.jar
+/usr/lib/plugins/gradle-diagnostics-6.8.3.jar
+/usr/lib/plugins/gradle-ear-6.8.3.jar
+/usr/lib/plugins/gradle-enterprise-6.8.3.jar
+/usr/lib/plugins/gradle-ide-6.8.3.jar
+/usr/lib/plugins/gradle-ide-native-6.8.3.jar
+/usr/lib/plugins/gradle-ide-play-6.8.3.jar
+/usr/lib/plugins/gradle-ivy-6.8.3.jar
+/usr/lib/plugins/gradle-jacoco-6.8.3.jar
+/usr/lib/plugins/gradle-java-compiler-plugin-6.8.3.jar
+/usr/lib/plugins/gradle-javascript-6.8.3.jar
+/usr/lib/plugins/gradle-kotlin-dsl-provider-plugins-6.8.3.jar
+/usr/lib/plugins/gradle-kotlin-dsl-tooling-builders-6.8.3.jar
+/usr/lib/plugins/gradle-language-groovy-6.8.3.jar
+/usr/lib/plugins/gradle-language-java-6.8.3.jar
+/usr/lib/plugins/gradle-language-jvm-6.8.3.jar
+/usr/lib/plugins/gradle-language-native-6.8.3.jar
+/usr/lib/plugins/gradle-language-scala-6.8.3.jar
+/usr/lib/plugins/gradle-maven-6.8.3.jar
+/usr/lib/plugins/gradle-platform-base-6.8.3.jar
+/usr/lib/plugins/gradle-platform-jvm-6.8.3.jar
+/usr/lib/plugins/gradle-platform-native-6.8.3.jar
+/usr/lib/plugins/gradle-platform-play-6.8.3.jar
+/usr/lib/plugins/gradle-plugin-development-6.8.3.jar
+/usr/lib/plugins/gradle-plugin-use-6.8.3.jar
+/usr/lib/plugins/gradle-plugins-6.8.3.jar
+/usr/lib/plugins/gradle-publish-6.8.3.jar
+/usr/lib/plugins/gradle-reporting-6.8.3.jar
+/usr/lib/plugins/gradle-resources-gcs-6.8.3.jar
+/usr/lib/plugins/gradle-resources-http-6.8.3.jar
+/usr/lib/plugins/gradle-resources-s3-6.8.3.jar
+/usr/lib/plugins/gradle-resources-sftp-6.8.3.jar
+/usr/lib/plugins/gradle-scala-6.8.3.jar
+/usr/lib/plugins/gradle-security-6.8.3.jar
+/usr/lib/plugins/gradle-signing-6.8.3.jar
+/usr/lib/plugins/gradle-test-kit-6.8.3.jar
+/usr/lib/plugins/gradle-testing-base-6.8.3.jar
+/usr/lib/plugins/gradle-testing-junit-platform-6.8.3.jar
+/usr/lib/plugins/gradle-testing-jvm-6.8.3.jar
+/usr/lib/plugins/gradle-testing-native-6.8.3.jar
+/usr/lib/plugins/gradle-tooling-api-builders-6.8.3.jar
+/usr/lib/plugins/gradle-tooling-native-6.8.3.jar
+/usr/lib/plugins/gradle-version-control-6.8.3.jar
+/usr/lib/plugins/gradle-workers-6.8.3.jar
+/usr/lib/plugins/gson-2.8.5.jar
+/usr/lib/plugins/hamcrest-core-1.3.jar
+/usr/lib/plugins/httpclient-4.5.10.jar
+/usr/lib/plugins/httpcore-4.4.12.jar
+/usr/lib/plugins/ion-java-1.0.2.jar
+/usr/lib/plugins/ivy-2.3.0.jar
+/usr/lib/plugins/jackson-annotations-2.10.2.jar
+/usr/lib/plugins/jackson-core-2.10.2.jar
+/usr/lib/plugins/jackson-databind-2.10.2.jar
+/usr/lib/plugins/jatl-0.2.3.jar
+/usr/lib/plugins/jaxb-impl-2.3.2.jar
+/usr/lib/plugins/jcifs-1.3.17.jar
+/usr/lib/plugins/jcommander-1.72.jar
+/usr/lib/plugins/jmespath-java-1.11.633.jar
+/usr/lib/plugins/joda-time-2.10.4.jar
+/usr/lib/plugins/jsch-0.1.55.jar
+/usr/lib/plugins/junit-4.13.jar
+/usr/lib/plugins/junit-platform-commons-1.7.0.jar
+/usr/lib/plugins/junit-platform-engine-1.7.0.jar
+/usr/lib/plugins/junit-platform-launcher-1.7.0.jar
+/usr/lib/plugins/jzlib-1.1.3.jar
+/usr/lib/plugins/maven-aether-provider-3.0.5.jar
+/usr/lib/plugins/maven-artifact-3.0.5.jar
+/usr/lib/plugins/maven-compat-3.0.5.jar
+/usr/lib/plugins/maven-core-3.0.5.jar
+/usr/lib/plugins/maven-model-3.0.5.jar
+/usr/lib/plugins/maven-model-builder-3.0.5.jar
+/usr/lib/plugins/maven-plugin-api-3.0.5.jar
+/usr/lib/plugins/maven-repository-metadata-3.0.5.jar
+/usr/lib/plugins/maven-settings-3.0.5.jar
+/usr/lib/plugins/maven-settings-builder-3.0.5.jar
+/usr/lib/plugins/nekohtml-1.9.22.jar
+/usr/lib/plugins/opentest4j-1.2.0.jar
+/usr/lib/plugins/org.eclipse.jgit-5.7.0.202003110725-r.jar
+/usr/lib/plugins/plexus-cipher-1.7.jar
+/usr/lib/plugins/plexus-classworlds-2.5.1.jar
+/usr/lib/plugins/plexus-component-annotations-1.5.5.jar
+/usr/lib/plugins/plexus-container-default-1.7.1.jar
+/usr/lib/plugins/plexus-interpolation-1.14.jar
+/usr/lib/plugins/plexus-sec-dispatcher-1.3.jar
+/usr/lib/plugins/plexus-utils-3.1.0.jar
+/usr/lib/plugins/pmaven-common-0.8-20100325.jar
+/usr/lib/plugins/pmaven-groovy-0.8-20100325.jar
+/usr/lib/plugins/rhino-1.7.10.jar
+/usr/lib/plugins/simple-4.1.21.jar
+/usr/lib/plugins/snakeyaml-1.17.jar
+/usr/lib/plugins/testng-6.3.1.jar
+/usr/lib/plugins/wagon-file-3.0.0.jar
+/usr/lib/plugins/wagon-http-3.0.0.jar
+/usr/lib/plugins/wagon-http-shared-3.0.0.jar
+/usr/lib/plugins/wagon-provider-api-3.0.0.jar
+/usr/lib/plugins/xbean-reflect-3.7.jar
+/usr/lib/plugins/xercesImpl-2.12.0.jar
